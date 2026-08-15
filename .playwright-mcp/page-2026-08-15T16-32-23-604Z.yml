@@ -1,0 +1,234 @@
+- generic [ref=f1e2]:
+  - generic [ref=f1e3]:
+    - generic [ref=f1e4]:
+      - generic [ref=f1e5]: DATUMBIM
+      - generic [ref=f1e6]: WEB REVIT
+    - generic [ref=f1e7]: TASK 002 — Application Shell
+  - generic [ref=f1e9]:
+    - button "📄" [ref=f1e10] [cursor=pointer]
+    - button "📂" [ref=f1e11] [cursor=pointer]
+    - button "💾" [ref=f1e12] [cursor=pointer]
+    - button "Save As (Ctrl+Shift+S)" [ref=f1e13] [cursor=pointer]
+    - button "Export (Ctrl+E)" [ref=f1e14] [cursor=pointer]
+    - generic [ref=f1e16]: Shell ready
+  - generic [ref=f1e17]:
+    - generic [ref=f1e18]:
+      - button "Architecture" [ref=f1e19] [cursor=pointer]
+      - button "Structure" [ref=f1e20] [cursor=pointer]
+      - button "MEP" [ref=f1e21] [cursor=pointer]
+      - button "Insert" [ref=f1e22] [cursor=pointer]
+      - button "Annotate" [ref=f1e23] [cursor=pointer]
+      - button "View" [ref=f1e24] [cursor=pointer]
+      - button "Manage" [ref=f1e25] [cursor=pointer]
+      - button "Collaborate" [ref=f1e26] [cursor=pointer]
+      - button "Analyze" [ref=f1e27] [cursor=pointer]
+      - button "Automate" [ref=f1e28] [cursor=pointer]
+      - button "DATUMBIM" [ref=f1e29] [cursor=pointer]
+    - generic [ref=f1e30]:
+      - generic [ref=f1e31]:
+        - generic [ref=f1e32]: Build
+        - generic [ref=f1e33]:
+          - button "📐 Wall" [ref=f1e34] [cursor=pointer]:
+            - generic [ref=f1e35]: 📐
+            - generic [ref=f1e36]: Wall
+          - button "🚪 Door" [ref=f1e37] [cursor=pointer]:
+            - generic [ref=f1e38]: 🚪
+            - generic [ref=f1e39]: Door
+          - button "🪟 Window" [ref=f1e40] [cursor=pointer]:
+            - generic [ref=f1e41]: 🪟
+            - generic [ref=f1e42]: Window
+          - button "🏠 Roof" [ref=f1e43] [cursor=pointer]:
+            - generic [ref=f1e44]: 🏠
+            - generic [ref=f1e45]: Roof
+          - button "⬜ Floor" [ref=f1e46] [cursor=pointer]:
+            - generic [ref=f1e47]: ⬜
+            - generic [ref=f1e48]: Floor
+      - generic [ref=f1e49]:
+        - generic [ref=f1e50]: Model
+        - generic [ref=f1e51]:
+          - button "🏛️ Column" [ref=f1e52] [cursor=pointer]:
+            - generic [ref=f1e53]: 🏛️
+            - generic [ref=f1e54]: Column
+          - button "🔲 Beam" [ref=f1e55] [cursor=pointer]:
+            - generic [ref=f1e56]: 🔲
+            - generic [ref=f1e57]: Beam
+          - button "➕ Grid" [ref=f1e58] [cursor=pointer]:
+            - generic [ref=f1e59]: ➕
+            - generic [ref=f1e60]: Grid
+          - button "📏 Level" [ref=f1e61] [cursor=pointer]:
+            - generic [ref=f1e62]: 📏
+            - generic [ref=f1e63]: Level
+  - generic [ref=f1e64]:
+    - generic [ref=f1e65]:
+      - generic [ref=f1e66]: Project Browser
+      - generic [ref=f1e69]:
+        - button "▼ Sample Project" [ref=f1e70] [cursor=pointer]:
+          - generic [ref=f1e71]: ▼
+          - generic [ref=f1e72]: Sample Project
+        - generic [ref=f1e73]:
+          - generic [ref=f1e74]:
+            - button "▼ Views" [ref=f1e75] [cursor=pointer]:
+              - generic [ref=f1e76]: ▼
+              - generic [ref=f1e77]: Views
+            - generic [ref=f1e78]:
+              - 'button "{3D}" [ref=f1e80] [cursor=pointer]'
+              - button "Floor Plan - Level 1" [ref=f1e83] [cursor=pointer]
+              - button "Floor Plan - Level 2" [ref=f1e86] [cursor=pointer]
+              - button "Elevation - North" [ref=f1e89] [cursor=pointer]
+              - button "Section - A-A" [ref=f1e92] [cursor=pointer]
+          - button "▶ Sheets" [ref=f1e95] [cursor=pointer]:
+            - generic [ref=f1e96]: ▶
+            - generic [ref=f1e97]: Sheets
+          - button "▶ Models" [ref=f1e99] [cursor=pointer]:
+            - generic [ref=f1e100]: ▶
+            - generic [ref=f1e101]: Models
+    - generic [ref=f1e102]:
+      - generic [ref=f1e103]:
+        - button "← Back" [disabled] [ref=f1e104]
+        - generic [ref=f1e105]: "|"
+        - generic [ref=f1e106]: view-3d
+      - generic [ref=f1e107]:
+        - 'button "🎲 {3D}" [ref=f1e108] [cursor=pointer]':
+          - generic [ref=f1e109]: 🎲
+          - generic [ref=f1e110]: "{3D}"
+        - button "📋 Floor Plan" [ref=f1e111] [cursor=pointer]:
+          - generic [ref=f1e112]: 📋
+          - generic [ref=f1e113]: Floor Plan
+        - button "📋 Ceiling Plan" [ref=f1e114] [cursor=pointer]:
+          - generic [ref=f1e115]: 📋
+          - generic [ref=f1e116]: Ceiling Plan
+        - button "📊 Elevation 1" [ref=f1e117] [cursor=pointer]:
+          - generic [ref=f1e118]: 📊
+          - generic [ref=f1e119]: Elevation 1
+        - button "✂️ Section 1" [ref=f1e120] [cursor=pointer]:
+          - generic [ref=f1e121]: ✂️
+          - generic [ref=f1e122]: Section 1
+        - button "🔍 Detail 1" [ref=f1e123] [cursor=pointer]:
+          - generic [ref=f1e124]: 🔍
+          - generic [ref=f1e125]: Detail 1
+        - button "📊 Schedule 1" [ref=f1e126] [cursor=pointer]:
+          - generic [ref=f1e127]: 📊
+          - generic [ref=f1e128]: Schedule 1
+        - button "📄 Sheet 1" [ref=f1e129] [cursor=pointer]:
+          - generic [ref=f1e130]: 📄
+          - generic [ref=f1e131]: Sheet 1
+        - button "✏️ Drafting 1" [ref=f1e132] [cursor=pointer]:
+          - generic [ref=f1e133]: ✏️
+          - generic [ref=f1e134]: Drafting 1
+        - button "+" [ref=f1e135] [cursor=pointer]
+      - generic [ref=f1e136]:
+        - generic [ref=f1e138]:
+          - generic [ref=f1e139]:
+            - generic [ref=f1e140]: 🏗️
+            - generic [ref=f1e141]: "View: view-3d"
+            - generic [ref=f1e142]: DATUMBIM Canvas — awaiting model data
+          - generic [ref=f1e143]: Canvas placeholder
+        - generic [ref=f1e144]:
+          - button "✋" [ref=f1e145] [cursor=pointer]
+          - button "🔍" [ref=f1e146] [cursor=pointer]
+          - button "🔄" [ref=f1e147] [cursor=pointer]
+          - button "🚶" [ref=f1e148] [cursor=pointer]
+          - button "⛶" [ref=f1e149] [cursor=pointer]
+          - generic [ref=f1e151]: available
+    - generic [ref=f1e152]:
+      - generic [ref=f1e153]:
+        - generic [ref=f1e154]: Properties
+        - button "▼" [ref=f1e155] [cursor=pointer]
+      - generic [ref=f1e156]:
+        - generic [ref=f1e157]: No selection
+        - generic [ref=f1e158]:
+          - generic [ref=f1e159]: Identity Data
+          - generic [ref=f1e160]:
+            - generic [ref=f1e161]:
+              - generic [ref=f1e162]: Mark
+              - generic [ref=f1e163]: —
+            - generic [ref=f1e164]:
+              - generic [ref=f1e165]: Type
+              - generic [ref=f1e166]: —
+            - generic [ref=f1e167]:
+              - generic [ref=f1e168]: Level
+              - generic [ref=f1e169]: —
+        - generic [ref=f1e170]:
+          - generic [ref=f1e171]: Constraints
+          - generic [ref=f1e172]:
+            - generic [ref=f1e173]:
+              - generic [ref=f1e174]: Base Level
+              - generic [ref=f1e175]: —
+            - generic [ref=f1e176]:
+              - generic [ref=f1e177]: Top Level
+              - generic [ref=f1e178]: —
+            - generic [ref=f1e179]:
+              - generic [ref=f1e180]: Height
+              - generic [ref=f1e181]: Not set
+        - generic [ref=f1e182]:
+          - generic [ref=f1e183]: Dimensions
+          - generic [ref=f1e184]:
+            - generic [ref=f1e185]:
+              - generic [ref=f1e186]: Width
+              - generic [ref=f1e187]: Not set
+            - generic [ref=f1e188]:
+              - generic [ref=f1e189]: Depth
+              - generic [ref=f1e190]: Not set
+            - generic [ref=f1e191]:
+              - generic [ref=f1e192]: Area
+              - generic [ref=f1e193]: Not set
+        - generic [ref=f1e194]:
+          - generic [ref=f1e195]: Materials
+          - generic [ref=f1e196]:
+            - generic [ref=f1e197]:
+              - generic [ref=f1e198]: Material
+              - generic [ref=f1e199]: —
+            - generic [ref=f1e200]:
+              - generic [ref=f1e201]: Finish
+              - generic [ref=f1e202]: —
+        - generic [ref=f1e203]:
+          - generic [ref=f1e204]: Location
+          - generic [ref=f1e205]:
+            - generic [ref=f1e206]:
+              - generic [ref=f1e207]: X
+              - generic [ref=f1e208]: Not set
+            - generic [ref=f1e209]:
+              - generic [ref=f1e210]: "Y"
+              - generic [ref=f1e211]: Not set
+            - generic [ref=f1e212]:
+              - generic [ref=f1e213]: Z
+              - generic [ref=f1e214]: Not set
+        - generic [ref=f1e215]:
+          - generic [ref=f1e216]: Graphics
+          - generic [ref=f1e217]:
+            - generic [ref=f1e218]:
+              - generic [ref=f1e219]: Visible
+              - generic [ref=f1e220]: "Yes"
+            - generic [ref=f1e221]:
+              - generic [ref=f1e222]: Color
+              - generic [ref=f1e223]: —
+            - generic [ref=f1e224]:
+              - generic [ref=f1e225]: Transparency
+              - generic [ref=f1e226]: 0 %
+        - generic [ref=f1e227]:
+          - generic [ref=f1e228]: Data
+          - generic [ref=f1e229]:
+            - generic [ref=f1e230]:
+              - generic [ref=f1e231]: Created By
+              - generic [ref=f1e232]: —
+            - generic [ref=f1e233]:
+              - generic [ref=f1e234]: Created At
+              - generic [ref=f1e235]: —
+            - generic [ref=f1e236]:
+              - generic [ref=f1e237]: Modified At
+              - generic [ref=f1e238]: —
+  - generic [ref=f1e239]:
+    - generic [ref=f1e240]:
+      - generic [ref=f1e241]: READY
+      - generic [ref=f1e243]: "View: view-3d"
+      - generic [ref=f1e244]: "Nav: pan"
+      - generic [ref=f1e245]: "History: 0"
+    - button "TASK 002" [ref=f1e247] [cursor=pointer]
+  - generic [ref=f1e248]:
+    - button "← Back" [disabled] [ref=f1e249]
+    - generic [ref=f1e250]: "|"
+    - generic [ref=f1e251]: view-3d
+  - button "🔍 Search commands... Ctrl+K" [ref=f1e252] [cursor=pointer]:
+    - generic [ref=f1e253]: 🔍
+    - generic [ref=f1e254]: Search commands...
+    - generic [ref=f1e255]: Ctrl+K

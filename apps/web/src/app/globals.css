@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --datumbim-bg: #1e1e1e;
+  --datumbim-surface: #252526;
+  --datumbim-border: #3e3e42;
+  --datumbim-accent: #0078d4;
+  --datumbim-text: #cccccc;
+  --datumbim-text-secondary: #969696;
+  --datumbim-ribbon: #2d2d30;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--datumbim-bg);
+  color: var(--datumbim-text);
+}
+
+* {
+  box-sizing: border-box;
+}

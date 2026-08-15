@@ -1,0 +1,33 @@
+project:
+  name: DATUMBIM Web Revit
+  root: F:/001-DATUMBIM_SOFTWARE_WEB_REVIT
+  version: 0.1.0
+  task: 000
+  phase: 0
+  status: zero-state-initialized
+
+architecture:
+  frontend: Next.js + React + TypeScript
+  backend: FastAPI + Python
+  database: SQLAlchemy + Alembic
+  packages: pnpm monorepo
+
+drives:
+  - F:/
+  - Z:/
+
+resources:
+  external_index: resources/external-index/
+
+packages:
+  - apps/web
+  - apps/api
+  - apps/desktop
+  - packages/ui
+  - packages/core
+  - packages/database
+  - packages/bim-engine
+  - packages/sdk-manager
+  - packages/format-engine
+  - packages/viewer
+  - packages/shared

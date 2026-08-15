@@ -1,0 +1,42 @@
+{
+  "name": "datumbim",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DATUMBIM Web Revit — Professional Web-Based BIM Workstation",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm run dev --parallel",
+    "dev:web": "pnpm --filter @datumbim/web dev",
+    "dev:api": "pnpm --filter @datumbim/api dev",
+    "build": "pnpm run build --filter=./packages --filter=./apps",
+    "build:web": "pnpm --filter @datumbim/web build",
+    "build:api": "pnpm --filter @datumbim/api build",
+    "test": "pnpm run test --parallel",
+    "test:web": "pnpm --filter @datumbim/web test",
+    "test:api": "pnpm --filter @datumbim/api test",
+    "test:packages": "pnpm --filter @datumbim/* test",
+    "lint": "pnpm run lint --parallel",
+    "typecheck": "pnpm run typecheck --parallel",
+    "db:init": "pnpm --filter @datumbim/api db:init",
+    "db:migrate": "pnpm --filter @datumbim/api db:migrate",
+    "resources:index": "pnpm --filter @datumbim/api resources:index"
+  },
+  "keywords": [
+    "bim",
+    "revit",
+    "autodesk",
+    "web",
+    "workstation",
+    "aec"
+  ],
+  "author": "DATUMBIM",
+  "license": "PROPRIETARY",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.12.0"
+}

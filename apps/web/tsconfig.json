@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@datumbim/ui": ["../../packages/ui/src"],
+      "@datumbim/core": ["../../packages/core/src"],
+      "@datumbim/database": ["../../packages/database/src"],
+      "@datumbim/bim-engine": ["../../packages/bim-engine/src"],
+      "@datumbim/sdk-manager": ["../../packages/sdk-manager/src"],
+      "@datumbim/format-engine": ["../../packages/format-engine/src"],
+      "@datumbim/viewer": ["../../packages/viewer/src"],
+      "@datumbim/shared": ["../../packages/shared/src"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
