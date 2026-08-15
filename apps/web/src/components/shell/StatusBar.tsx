@@ -2,29 +2,38 @@
 
 import React from 'react'
 import { useShellStore } from '@/store/shellStore'
+import { useDesignSlice } from '@/store/slices/designSlice'
 
 export default function StatusBar() {
-  const { activeViewTab, navigation, commandHistory, addNotification } = useShellStore()
-  const historyLength = commandHistory.length
+  const { activeView, project } = useShellStore()
+  const selectedIds = useDesignSlice((state) => state.getSelectedElements())
 
   return (
     <div className="h-7 bg-datumbim-ribbon border-t border-datumbim-border flex items-center px-3 text-[11px] text-datumbim-textSecondary select-none">
       <div className="flex items-center gap-4">
-        <span className="flex items-center gap-1">
+        <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-green-500" />
           READY
         </span>
-        {activeViewTab && <span>View: {activeViewTab}</span>}
-        <span>Nav: {navigation.mode}</span>
-        <span>History: {historyLength}</span>
+        {activeView ? (
+          <span>View: <span className="text-datumbim-text">{activeView.name}</span></span>
+        ) : (
+          <span>No active view</span>
+        )}
+        {selectedIds.length > 0 && (
+          <span>{selectedIds.length} selected</span>
+        )}
+        <span>Nav: Pan</span>
+        <span>Units: mm</span>
       </div>
       <div className="ml-auto flex items-center gap-4">
-        <button
-          onClick={() => addNotification({ type: 'info', message: 'Task 002 shell active' })}
-          className="hover:text-datumbim-text"
-        >
-          TASK 002
-        </button>
+        {project.isOpen && project.name && (
+          <span className="text-datumbim-text">
+            {project.name}
+            {project.isModified && <span className="ml-1 text-yellow-500">●</span>}
+          </span>
+        )}
+        <span>TASK 006F</span>
       </div>
     </div>
   )

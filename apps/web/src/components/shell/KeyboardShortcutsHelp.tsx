@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useShellStore } from '@/store/shellStore'
 import { ALL_COMMANDS, CommandDefinition } from '@/constants/commands'
 
@@ -14,11 +14,11 @@ export default function KeyboardShortcutsHelp() {
       title: 'Keyboard Shortcuts',
       content: (
         <div className="max-h-96 overflow-auto">
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 gap-1 text-xs">
             {shortcuts.map((cmd) => (
               <div key={cmd.id} className="flex items-center justify-between py-1">
                 <span className="text-datumbim-text">{cmd.label}</span>
-                <span className="text-datumbim-textSecondary bg-datumbim-bg px-1.5 py-0.5 rounded text-[10px]">
+                <span className="text-datumbim-textSecondary bg-datumbim-bg px-1.5 py-0.5 rounded text-[10px] font-mono">
                   {cmd.shortcut}
                 </span>
               </div>
@@ -32,16 +32,19 @@ export default function KeyboardShortcutsHelp() {
   const openShortcutsRef = React.useRef(openShortcuts)
   openShortcutsRef.current = openShortcuts
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === '?') {
         e.preventDefault()
         openShortcutsRef.current()
       }
+      if (e.key === 'Escape') {
+        closeDialog('keyboard-shortcuts')
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  }, [closeDialog])
 
   return null
 }

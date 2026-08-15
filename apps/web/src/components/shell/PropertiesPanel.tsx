@@ -1,47 +1,166 @@
 'use client'
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useShellStore } from '@/store/shellStore'
 import { useDesignSlice } from '@/store/slices/designSlice'
 import { elementApi } from '@/lib/api/elements'
+import type { ElementResponse } from '@/types/api'
 
-const PROPERTY_SCHEMAS = [
-  {
-    id: 'identity',
-    label: 'Identity Data',
-    properties: ['type_id', 'category', 'name'] as const,
-  },
-  {
-    id: 'constraints',
-    label: 'Constraints',
-    properties: ['level_id', 'length', 'height', 'thickness'] as const,
-  },
-  {
-    id: 'dimensions',
-    label: 'Dimensions',
-    properties: ['width', 'depth', 'area', 'volume'] as const,
-  },
-  {
-    id: 'materials',
-    label: 'Materials',
-    properties: ['material', 'finish'] as const,
-  },
-  {
-    id: 'location',
-    label: 'Location',
-    properties: ['x', 'y', 'z'] as const,
-  },
-  {
-    id: 'graphics',
-    label: 'Graphics',
-    properties: ['visible', 'color', 'transparency'] as const,
-  },
-  {
-    id: 'data',
-    label: 'Data',
-    properties: ['created_by', 'created_at', 'modified_at'] as const,
-  },
-]
+type PropertyGroup = {
+  id: string
+  label: string
+  icon: string
+  properties: Array<{ key: string; label: string; unit?: string }>
+}
+
+const ELEMENT_PROPERTY_SCHEMAS: Record<string, PropertyGroup[]> = {
+  wall: [
+    {
+      id: 'identity',
+      label: 'Identity',
+      icon: '🏷️',
+      properties: [
+        { key: 'name', label: 'Name' },
+        { key: 'type_id', label: 'Type' },
+        { key: 'category', label: 'Category' },
+      ],
+    },
+    {
+      id: 'dimensions',
+      label: 'Dimensions',
+      icon: '📐',
+      properties: [
+        { key: 'length', label: 'Length', unit: 'mm' },
+        { key: 'height', label: 'Height', unit: 'mm' },
+        { key: 'thickness', label: 'Thickness', unit: 'mm' },
+        { key: 'area', label: 'Area', unit: 'm²' },
+        { key: 'volume', label: 'Volume', unit: 'm³' },
+      ],
+    },
+    {
+      id: 'location',
+      label: 'Location',
+      icon: '📍',
+      properties: [
+        { key: 'level_id', label: 'Level' },
+        { key: 'base_level', label: 'Base Level' },
+      ],
+    },
+    {
+      id: 'graphics',
+      label: 'Graphics',
+      icon: '🎨',
+      properties: [
+        { key: 'visible', label: 'Visible' },
+      ],
+    },
+  ],
+  door: [
+    {
+      id: 'identity',
+      label: 'Identity',
+      icon: '🏷️',
+      properties: [
+        { key: 'name', label: 'Name' },
+        { key: 'type_id', label: 'Type' },
+        { key: 'category', label: 'Category' },
+      ],
+    },
+    {
+      id: 'dimensions',
+      label: 'Dimensions',
+      icon: '📐',
+      properties: [
+        { key: 'width', label: 'Width', unit: 'mm' },
+        { key: 'height', label: 'Height', unit: 'mm' },
+        { key: 'sill_height', label: 'Sill Height', unit: 'mm' },
+        { key: 'head_height', label: 'Head Height', unit: 'mm' },
+      ],
+    },
+    {
+      id: 'location',
+      label: 'Location',
+      icon: '📍',
+      properties: [
+        { key: 'level_id', label: 'Level' },
+      ],
+    },
+  ],
+  window: [
+    {
+      id: 'identity',
+      label: 'Identity',
+      icon: '🏷️',
+      properties: [
+        { key: 'name', label: 'Name' },
+        { key: 'type_id', label: 'Type' },
+        { key: 'category', label: 'Category' },
+      ],
+    },
+    {
+      id: 'dimensions',
+      label: 'Dimensions',
+      icon: '📐',
+      properties: [
+        { key: 'width', label: 'Width', unit: 'mm' },
+        { key: 'height', label: 'Height', unit: 'mm' },
+        { key: 'sill_height', label: 'Sill Height', unit: 'mm' },
+        { key: 'head_height', label: 'Head Height', unit: 'mm' },
+      ],
+    },
+    {
+      id: 'location',
+      label: 'Location',
+      icon: '📍',
+      properties: [
+        { key: 'level_id', label: 'Level' },
+      ],
+    },
+  ],
+  default: [
+    {
+      id: 'identity',
+      label: 'Identity',
+      icon: '🏷️',
+      properties: [
+        { key: 'name', label: 'Name' },
+        { key: 'type_id', label: 'Type' },
+        { key: 'category', label: 'Category' },
+      ],
+    },
+    {
+      id: 'dimensions',
+      label: 'Dimensions',
+      icon: '📐',
+      properties: [
+        { key: 'length', label: 'Length', unit: 'mm' },
+        { key: 'area', label: 'Area', unit: 'm²' },
+      ],
+    },
+    {
+      id: 'graphics',
+      label: 'Graphics',
+      icon: '🎨',
+      properties: [
+        { key: 'visible', label: 'Visible' },
+      ],
+    },
+  ],
+}
+
+function getCategory(element: ElementResponse): string {
+  const cat = element.category.toLowerCase()
+  if (cat.includes('wall')) return 'wall'
+  if (cat.includes('door')) return 'door'
+  if (cat.includes('window')) return 'window'
+  if (cat.includes('roof')) return 'roof'
+  if (cat.includes('floor')) return 'floor'
+  if (cat.includes('column')) return 'column'
+  if (cat.includes('beam')) return 'beam'
+  if (cat.includes('duct')) return 'duct'
+  if (cat.includes('pipe')) return 'pipe'
+  return 'default'
+}
 
 function parseProperties(properties?: string) {
   if (!properties) return {}
@@ -55,7 +174,7 @@ function parseProperties(properties?: string) {
 export default function PropertiesPanel() {
   const { addNotification, activeView } = useShellStore()
   const selectedIds = useDesignSlice((state) => state.getSelectedElements())
-  const [elements, setElements] = React.useState<Record<string, { name: string; category: string; properties: Record<string, unknown> }>>({})
+  const [elements, setElements] = useState<Record<string, ElementResponse>>({})
 
   useEffect(() => {
     let cancelled = false
@@ -69,11 +188,7 @@ export default function PropertiesPanel() {
       const next: typeof elements = {}
       for (const res of results) {
         if (res.data) {
-          next[res.data.id] = {
-            name: res.data.name,
-            category: res.data.category,
-            properties: parseProperties(res.data.properties),
-          }
+          next[res.data.id] = res.data
         }
       }
       setElements(next)
@@ -89,17 +204,22 @@ export default function PropertiesPanel() {
     return elements[id] || null
   }, [selectedIds, elements])
 
-  const renderValue = (property: string) => {
+  const propertyGroups = useMemo(() => {
+    if (!selectedElement) return []
+    const category = getCategory(selectedElement)
+    return ELEMENT_PROPERTY_SCHEMAS[category] || ELEMENT_PROPERTY_SCHEMAS.default
+  }, [selectedElement])
+
+  const renderValue = (property: string, unit?: string) => {
     if (!selectedElement) return <span className="text-datumbim-textSecondary italic">Not set</span>
-    const value = selectedElement.properties[property]
-    if (value === undefined || value === null) {
+    const value = parseProperties(selectedElement.properties)[property] ?? (selectedElement as unknown as Record<string, unknown>)[property]
+    if (value === undefined || value === null || value === '') {
       return <span className="text-datumbim-textSecondary italic">Not set</span>
     }
     if (typeof value === 'boolean') {
       return <span>{value ? 'Yes' : 'No'}</span>
     }
-    const unit = property.toLowerCase().includes('area') ? ' m²' : property.toLowerCase().includes('length') || property.toLowerCase().includes('width') || property.toLowerCase().includes('height') ? ' mm' : ''
-    return <span>{`${value}${unit}`}</span>
+    return <span>{`${value}${unit ? ` ${unit}` : ''}`}</span>
   }
 
   return (
@@ -118,10 +238,10 @@ export default function PropertiesPanel() {
       <div className="flex-1 overflow-auto p-3">
         {activeView ? (
           <div className="text-xs text-datumbim-textSecondary mb-3">
-            View: {activeView.name}
+            View: <span className="text-datumbim-text">{activeView.name}</span>
           </div>
         ) : (
-          <div className="text-xs text-datumbim-textSecondary mb-3">No selection</div>
+          <div className="text-xs text-datumbim-textSecondary mb-3">No active view</div>
         )}
         {selectedIds.length > 0 && (
           <div className="text-xs text-datumbim-textSecondary mb-3">
@@ -130,47 +250,30 @@ export default function PropertiesPanel() {
         )}
         {selectedElement ? (
           <>
-            <div className="mb-3">
-              <div className="text-[11px] font-semibold text-datumbim-textSecondary mb-1 uppercase tracking-wider">Selected Element</div>
-              <div className="text-xs text-datumbim-text">{selectedElement.name}</div>
+            <div className="mb-4 pb-3 border-b border-datumbim-border">
+              <div className="text-xs font-semibold text-datumbim-text mb-1">{selectedElement.name}</div>
               <div className="text-[11px] text-datumbim-textSecondary">{selectedElement.category}</div>
+              <div className="text-[10px] text-datumbim-textSecondary mt-1 font-mono">ID: {selectedElement.id}</div>
             </div>
-            {PROPERTY_SCHEMAS.map((group) => {
-              const relevant = group.properties.filter((key) => key in selectedElement.properties)
-              if (relevant.length === 0) return null
-              return (
-                <div key={group.id} className="mb-4">
-                  <div className="text-[11px] font-semibold text-datumbim-textSecondary mb-2 uppercase tracking-wider">
-                    {group.label}
-                  </div>
-                  <div className="space-y-1">
-                    {relevant.map((property) => (
-                      <div key={property} className="flex items-center justify-between text-xs">
-                        <span className="text-datumbim-textSecondary">{property}</span>
-                        <span className="text-datumbim-text">{renderValue(property)}</span>
-                      </div>
-                    ))}
-                  </div>
+            {propertyGroups.map((group) => (
+              <div key={group.id} className="mb-4">
+                <div className="text-[11px] font-semibold text-datumbim-textSecondary mb-2 uppercase tracking-wider flex items-center gap-1">
+                  <span>{group.icon}</span>
+                  {group.label}
                 </div>
-              )
-            })}
+                <div className="space-y-1.5">
+                  {group.properties.map((property) => (
+                    <div key={property.key} className="flex items-center justify-between text-xs">
+                      <span className="text-datumbim-textSecondary">{property.label}</span>
+                      <span className="text-datumbim-text text-right">{renderValue(property.key, property.unit)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </>
         ) : (
-          PROPERTY_SCHEMAS.map((group) => (
-            <div key={group.id} className="mb-4">
-              <div className="text-[11px] font-semibold text-datumbim-textSecondary mb-2 uppercase tracking-wider">
-                {group.label}
-              </div>
-              <div className="space-y-1">
-                {group.properties.map((property) => (
-                  <div key={property} className="flex items-center justify-between text-xs">
-                    <span className="text-datumbim-textSecondary">{property}</span>
-                    <span className="text-datumbim-text">{renderValue(property)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))
+          <div className="text-xs text-datumbim-textSecondary italic">No element selected</div>
         )}
       </div>
     </div>

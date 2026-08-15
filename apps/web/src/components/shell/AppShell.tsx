@@ -16,8 +16,11 @@ import ContextMenu from './ContextMenu'
 import NavigationBreadcrumb from './NavigationBreadcrumb'
 import KeyboardShortcutsHelp from './KeyboardShortcutsHelp'
 import FileImportDialog from './FileImportDialog'
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 
 export default function AppShell() {
+  useKeyboardShortcuts()
+
   return (
     <div className="h-screen w-screen flex flex-col bg-datumbim-bg text-datumbim-text overflow-hidden">
       <TopBar />

@@ -27,6 +27,26 @@ export const projectApi = {
     return res
   },
 
+  async open(id: string) {
+    const res = await apiClient.post<ProjectResponse>(`/projects/${id}/open`, {})
+    return res
+  },
+
+  async close(id: string) {
+    const res = await apiClient.post<{ detail: string }>(`/projects/${id}/close`, {})
+    return res
+  },
+
+  async save(id: string) {
+    const res = await apiClient.post<{ detail: string; last_saved_at?: string }>(`/projects/${id}/save`, {})
+    return res
+  },
+
+  async recent() {
+    const res = await apiClient.get<ProjectResponse[]>('/projects/recent')
+    return res
+  },
+
   async models(projectId: string) {
     const res = await apiClient.get(`/projects/${projectId}/models`)
     return res

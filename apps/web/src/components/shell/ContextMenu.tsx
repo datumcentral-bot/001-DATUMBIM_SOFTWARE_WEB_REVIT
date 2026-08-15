@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react'
 import { useShellStore } from '@/store/shellStore'
 
 export default function ContextMenu() {
-  const { contextMenu, closeContextMenu } = useShellStore()
+  const { contextMenu, closeContextMenu, executeCommand } = useShellStore()
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -21,6 +21,13 @@ export default function ContextMenu() {
 
   if (!contextMenu.open) return null
 
+  const handleItemClick = (itemId: string, action?: string) => {
+    if (action) {
+      executeCommand(action)
+    }
+    closeContextMenu()
+  }
+
   return (
     <div
       ref={menuRef}
@@ -34,12 +41,14 @@ export default function ContextMenu() {
           <button
             key={item.id}
             disabled={item.disabled}
+            onClick={() => handleItemClick(item.id, item.action)}
             className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs text-left ${
               item.disabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-datumbim-border/50 text-datumbim-text'
             }`}
           >
             {item.icon && <span>{item.icon}</span>}
-            <span>{item.label}</span>
+            <span className="flex-1">{item.label}</span>
+            {item.shortcut && <span className="text-[10px] text-datumbim-textSecondary">{item.shortcut}</span>}
           </button>
         )
       )}

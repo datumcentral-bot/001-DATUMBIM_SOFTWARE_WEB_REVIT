@@ -53,9 +53,20 @@ export interface ContextMenuItem {
   icon?: string
   disabled?: boolean
   divider?: boolean
+  action?: string
+  shortcut?: string
 }
 
 export interface NavigationState {
   stack: string[]
   currentView: string | null
+}
+
+export interface ProjectState {
+  id: string | null
+  name: string | null
+  description: string | null
+  isOpen: boolean
+  isModified: boolean
+  lastSavedAt: Date | null
 }
