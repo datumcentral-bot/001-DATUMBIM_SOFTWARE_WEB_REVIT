@@ -1,9 +1,11 @@
 import { create } from 'zustand'
-import { ShellNotification, ShellDialog, ContextMenuState, ViewTab } from '@/types/shell'
+import { ShellNotification, ShellDialog, ContextMenuState, ViewTab, ProjectState } from '@/types/shell'
 import { DEFAULT_VIEW_TABS, RIBBON_TABS, RIBBON_PANELS } from '@/constants/shell'
 import { CommandDefinition, ALL_COMMANDS } from '@/constants/commands'
 import { CommandContext, CommandHistoryEntry, NavigationState, ViewDefinition } from '@/types/commands'
 import { DESIGN_COMMAND_REGISTRY } from '@/commands'
+import { projectApi } from '@/lib/api/projects'
+import type { ProjectResponse } from '@/types/api'
 
 interface ShellState {
   activeRibbonTab: string
@@ -41,6 +43,16 @@ interface ShellState {
   views: ViewDefinition[]
   activeView: ViewDefinition | null
   setActiveView: (viewId: string) => void
+  project: ProjectState
+  recentProjects: ProjectResponse[]
+  projectLoading: boolean
+  projectError: string | null
+  openProject: (project: ProjectResponse) => void
+  closeProject: () => void
+  markProjectModified: () => void
+  markProjectSaved: () => void
+  loadRecentProjects: () => Promise<void>
+  createProject: (payload: { name: string; description?: string }) => Promise<ProjectResponse | null>
 }
 
 export const useShellStore = create<ShellState>((set, get) => ({
@@ -159,5 +171,93 @@ export const useShellStore = create<ShellState>((set, get) => ({
   setActiveView: (viewId) => {
     const view = get().views.find((v) => v.id === viewId) || null
     set({ activeView: view })
+  },
+  project: {
+    id: null,
+    name: null,
+    description: null,
+    isOpen: false,
+    isModified: false,
+    lastSavedAt: null,
+  },
+  recentProjects: [],
+  projectLoading: false,
+  projectError: null,
+  openProject: async (project) => {
+    set({ projectLoading: true, projectError: null })
+    try {
+      const res = await projectApi.open(project.id)
+      if (res.error) {
+        set({ projectError: res.error, projectLoading: false })
+        return
+      }
+      set({
+        project: {
+          id: project.id,
+          name: project.name,
+          description: project.description ?? null,
+          isOpen: true,
+          isModified: false,
+          lastSavedAt: new Date(),
+        },
+        projectLoading: false,
+      })
+      get().loadRecentProjects()
+    } catch (e) {
+      set({ projectError: e instanceof Error ? e.message : 'Failed to open project', projectLoading: false })
+    }
+  },
+  closeProject: () => {
+    set({
+      project: {
+        id: null,
+        name: null,
+        description: null,
+        isOpen: false,
+        isModified: false,
+        lastSavedAt: null,
+      },
+    })
+  },
+  markProjectModified: () =>
+    set((state) => ({
+      project: { ...state.project, isModified: true },
+    })),
+  markProjectSaved: () =>
+    set((state) => ({
+      project: { ...state.project, isModified: false, lastSavedAt: new Date() },
+    })),
+  loadRecentProjects: async () => {
+    const res = await projectApi.list()
+    if (!res.error && res.data) {
+      set({ recentProjects: res.data as ProjectResponse[] })
+    }
+  },
+  createProject: async (payload) => {
+    set({ projectLoading: true, projectError: null })
+    try {
+      const res = await projectApi.create(payload)
+      if (res.error || !res.data) {
+        set({ projectError: res.error || 'Failed to create project', projectLoading: false })
+        return null
+      }
+      const created = res.data as ProjectResponse
+      set({
+        project: {
+          id: created.id,
+          name: created.name,
+          description: created.description ?? null,
+          isOpen: true,
+          isModified: false,
+          lastSavedAt: new Date(),
+        },
+        projectLoading: false,
+      })
+      get().loadRecentProjects()
+      return created
+    } catch (e) {
+      set({ projectError: e instanceof Error ? e.message : 'Failed to create project', projectLoading: false })
+      return null
+    }
   },
 }))

@@ -1,4 +1,4 @@
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 from datumbim.db.session import Base
@@ -9,10 +9,20 @@ class Project(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    code: Mapped[str | None] = mapped_column(String(50), unique=True, index=True)
     description: Mapped[str | None] = mapped_column(Text)
+    client: Mapped[str | None] = mapped_column(String(255))
+    location: Mapped[str | None] = mapped_column(String(255))
+    project_number: Mapped[str | None] = mapped_column(String(100), index=True)
+    status: Mapped[str] = mapped_column(String(50), default="active", index=True)
+    units: Mapped[str | None] = mapped_column(String(20), default="metric")
+    version: Mapped[str | None] = mapped_column(String(50), default="1.0")
+    is_active: Mapped[bool] = mapped_column(default=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[DateTime | None] = mapped_column(DateTime(timezone=True), onupdate=func.now())
-    is_active: Mapped[bool] = mapped_column(default=True)
+    last_opened_at: Mapped[DateTime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_saved_at: Mapped[DateTime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
 
 class Model(Base):
     __tablename__ = "models"

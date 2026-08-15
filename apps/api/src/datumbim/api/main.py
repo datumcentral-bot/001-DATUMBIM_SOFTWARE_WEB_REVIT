@@ -7,6 +7,7 @@ from datumbim.routes.documents import router as documents_router
 from datumbim.routes.levels import router as levels_router
 from datumbim.routes.elements import router as elements_router
 from datumbim.routes.formats import router as formats_router
+from datumbim.routes.files import router as files_router
 
 app = FastAPI(
     title="DATUMBIM API",
@@ -28,7 +29,8 @@ app.include_router(documents_router)
 app.include_router(levels_router)
 app.include_router(elements_router)
 app.include_router(formats_router)
+app.include_router(files_router)
 
 @app.get("/health")
 async def health() -> dict[str, str]:
-    return {"status": "ok", "task": "005"}
+    return {"status": "ok", "task": "006"}
