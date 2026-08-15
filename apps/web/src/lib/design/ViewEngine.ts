@@ -42,9 +42,17 @@ export class ViewEngine {
   }
 
   setActiveView(viewId: string): void {
-    const view = this.state.views.find((v) => v.id === viewId)
+    let view = this.state.views.find((v) => v.id === viewId)
     if (!view) {
-      throw new Error(`View not found: ${viewId}`)
+      view = {
+        id: viewId,
+        name: viewId,
+        type: '3d',
+        discipline: 'generic',
+        visibilityState: true,
+        activeState: true,
+      }
+      this.state.views.push(view)
     }
     this.state.activeViewId = viewId
     this.state.cameraState = view.cameraState ?? null

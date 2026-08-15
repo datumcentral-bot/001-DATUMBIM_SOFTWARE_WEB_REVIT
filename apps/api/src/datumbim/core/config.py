@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     app_name: str = "DATUMBIM API"
     version: str = "0.1.0"
-    database_url: str = "sqlite:///./datumbim.db"
+    database_url: str = "sqlite+aiosqlite:///./datumbim.db"
     secret_key: str = "dev-secret-key"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30

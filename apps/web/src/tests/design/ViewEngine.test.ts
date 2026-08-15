@@ -77,8 +77,11 @@ describe('ViewEngine', () => {
     expect(engine.getState().cameraState).toEqual(view.cameraState)
   })
 
-  it('throws when setting non-existent view as active', () => {
-    expect(() => engine.setActiveView('nonexistent')).toThrow('View not found: nonexistent')
+  it('auto-creates view when setting non-existent view as active', () => {
+    engine.setActiveView('nonexistent')
+    expect(engine.getState().activeViewId).toBe('nonexistent')
+    expect(engine.getState().views).toHaveLength(1)
+    expect(engine.getState().views[0].id).toBe('nonexistent')
   })
 
   it('returns null for getActiveView when no active view', () => {

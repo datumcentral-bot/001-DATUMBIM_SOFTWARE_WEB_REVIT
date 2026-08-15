@@ -3,6 +3,8 @@ import { ElementEngine } from './ElementEngine'
 import { SelectionEngine } from './SelectionEngine'
 import { TransformEngine } from './TransformEngine'
 import { RenderEngine } from './RenderEngine'
+import { DEFAULT_VIEW_TABS } from '@/constants/shell'
+import { ViewDefinition } from './types/ViewTypes'
 
 export interface DesignEngineState {
   initialized: boolean
@@ -50,6 +52,21 @@ export class DesignEngine {
   initialize(): void {
     if (this.initialized) return
     this.initialized = true
+    const defaultViews: ViewDefinition[] = DEFAULT_VIEW_TABS.map((tab) => ({
+      id: tab.id,
+      name: tab.label,
+      type: tab.type,
+      discipline: 'generic' as const,
+      visibilityState: true,
+      activeState: tab.id === 'view-3d',
+      cameraState: tab.type === '3d'
+        ? { position: { x: 100, y: 100, z: 100 }, target: { x: 0, y: 0, z: 0 }, up: { x: 0, y: 1, z: 0 } }
+        : undefined,
+    }))
+    defaultViews.forEach((view) => this.viewEngine.registerView(view))
+    if (defaultViews.length > 0) {
+      this.viewEngine.setActiveView(defaultViews[0].id)
+    }
     this.notify()
   }
 
