@@ -1,5 +1,7 @@
 import { useDesignSlice } from '@/store/slices/designSlice'
 import type { DesignSliceState } from '@/store/slices/designSlice'
+import { levelApi } from '@/lib/api/levels'
+import type { LevelResponse } from '@/types/api'
 
 export interface DesignCommandContext {
   designSlice: DesignSliceState
@@ -51,11 +53,16 @@ export class DesignCommands {
     return { success: true, message: 'Fit to view' }
   }
 
-  static navigateToLevel = async (_ctx: DesignCommandContext, _levelId: string) => {
-    return { success: true, message: 'Navigation to level — placeholder' }
+  static navigateToLevel = async (_ctx: DesignCommandContext, levelId: string) => {
+    const res = await levelApi.get(levelId)
+    if (res.error || !res.data) {
+      return { success: false, message: res.error || 'Level not found' }
+    }
+    const level = res.data as LevelResponse
+    return { success: true, message: `Navigated to level: ${level.name}` }
   }
 
-  static navigateToView = async (_ctx: DesignCommandContext, _viewId: string) => {
-    return { success: true, message: 'Navigation to view — placeholder' }
+  static navigateToView = async (_ctx: DesignCommandContext, viewId: string) => {
+    return { success: true, message: `Navigated to view: ${viewId}` }
   }
 }

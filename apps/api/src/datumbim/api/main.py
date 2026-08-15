@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from datumbim.routes.design import router as design_router
+from datumbim.routes.projects import router as projects_router
+from datumbim.routes.documents import router as documents_router
+from datumbim.routes.levels import router as levels_router
+from datumbim.routes.elements import router as elements_router
 
 app = FastAPI(
     title="DATUMBIM API",
@@ -18,7 +22,11 @@ app.add_middleware(
 )
 
 app.include_router(design_router)
+app.include_router(projects_router)
+app.include_router(documents_router)
+app.include_router(levels_router)
+app.include_router(elements_router)
 
 @app.get("/health")
 async def health() -> dict[str, str]:
-    return {"status": "ok", "task": "000"}
+    return {"status": "ok", "task": "004"}

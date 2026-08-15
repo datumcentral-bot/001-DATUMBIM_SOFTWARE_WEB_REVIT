@@ -1,10 +1,8 @@
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
+from datumbim.db.session import Base
 
-
-class Base(DeclarativeBase):
-    pass
 
 class Project(Base):
     __tablename__ = "projects"
