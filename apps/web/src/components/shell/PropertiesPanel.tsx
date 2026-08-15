@@ -174,6 +174,7 @@ function parseProperties(properties?: string) {
 export default function PropertiesPanel() {
   const { addNotification, activeView } = useShellStore()
   const selectedIds = useDesignSlice((state) => state.getSelectedElements())
+  const viewerEngine = useDesignSlice((state) => state.getViewerEngine())
   const [elements, setElements] = useState<Record<string, ElementResponse>>({})
 
   useEffect(() => {
@@ -201,8 +202,18 @@ export default function PropertiesPanel() {
   const selectedElement = useMemo(() => {
     const id = selectedIds[0]
     if (!id) return null
-    return elements[id] || null
-  }, [selectedIds, elements])
+    const apiElement = elements[id] || null
+    const viewerMetadata = viewerEngine?.getBIMElementMetadata(id)
+    if (viewerMetadata) {
+      return {
+        id: viewerMetadata.id as string,
+        name: viewerMetadata.name as string,
+        category: viewerMetadata.category as string,
+        properties: viewerMetadata.metadata as Record<string, unknown>,
+      } as unknown as ElementResponse
+    }
+    return apiElement
+  }, [selectedIds, elements, viewerEngine])
 
   const propertyGroups = useMemo(() => {
     if (!selectedElement) return []

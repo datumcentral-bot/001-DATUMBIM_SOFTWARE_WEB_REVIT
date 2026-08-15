@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { DesignEngine } from '@/lib/design'
+import { ViewerEngine } from '@/lib/viewer'
 
 export interface DesignSliceState {
   engine: DesignEngine
@@ -16,6 +17,10 @@ export interface DesignSliceState {
   fitToView: () => void
   getSelectedElements: () => string[]
   getActiveView: () => ReturnType<DesignEngine['viewEngine']['getActiveView']>
+  setViewerEngine: (engine: ViewerEngine | null) => void
+  getViewerEngine: () => ViewerEngine | null
+  loadDemoModel: () => void
+  setRenderMode: (mode: 'shaded' | 'wireframe') => void
 }
 
 export const useDesignSlice = create<DesignSliceState>((set, get) => ({
@@ -113,5 +118,30 @@ export const useDesignSlice = create<DesignSliceState>((set, get) => ({
   getActiveView: () => {
     const { engine } = get()
     return engine.viewEngine.getActiveView()
+  },
+
+  setViewerEngine: (viewerEngine: ViewerEngine | null) => {
+    const { engine } = get()
+    engine.viewerEngine = viewerEngine
+    engine.renderEngine.setViewerEngine(viewerEngine)
+  },
+
+  getViewerEngine: () => {
+    const { engine } = get()
+    return engine.viewerEngine
+  },
+
+  loadDemoModel: () => {
+    const { engine } = get()
+    if (engine.viewerEngine) {
+      engine.viewerEngine.loadDemoModel()
+    }
+  },
+
+  setRenderMode: (mode: 'shaded' | 'wireframe') => {
+    const { engine } = get()
+    if (engine.viewerEngine) {
+      engine.viewerEngine.setRenderMode(mode)
+    }
   },
 }))

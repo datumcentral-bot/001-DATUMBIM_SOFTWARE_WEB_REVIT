@@ -4,6 +4,7 @@ export { ElementEngine } from './ElementEngine'
 export { SelectionEngine } from './SelectionEngine'
 export { TransformEngine } from './TransformEngine'
 export { RenderEngine, type RenderContext } from './RenderEngine'
+export { ViewerEngine } from '@/lib/viewer'
 export type { ViewDefinition, ViewEngineState, CameraState } from './types/ViewTypes'
 export type {
   ElementDefinition,

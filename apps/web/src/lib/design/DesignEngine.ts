@@ -3,6 +3,7 @@ import { ElementEngine } from './ElementEngine'
 import { SelectionEngine } from './SelectionEngine'
 import { TransformEngine } from './TransformEngine'
 import { RenderEngine } from './RenderEngine'
+import { ViewerEngine } from '@/lib/viewer'
 import { DEFAULT_VIEW_TABS } from '@/constants/shell'
 import { ViewDefinition } from './types/ViewTypes'
 
@@ -19,6 +20,7 @@ export class DesignEngine {
   public readonly selectionEngine: SelectionEngine
   public readonly transformEngine: TransformEngine
   public readonly renderEngine: RenderEngine
+  public viewerEngine: ViewerEngine | null = null
 
   private initialized: boolean = false
   private listeners: Set<() => void> = new Set()
@@ -71,6 +73,8 @@ export class DesignEngine {
   }
 
   dispose(): void {
+    this.viewerEngine?.dispose()
+    this.viewerEngine = null
     this.renderEngine.dispose()
     this.initialized = false
     this.notify()

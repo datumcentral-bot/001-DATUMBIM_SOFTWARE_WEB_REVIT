@@ -1,6 +1,9 @@
+import { ViewerEngine } from '@/lib/viewer'
+
 export class RenderEngine {
   private initialized: boolean = false
   private context: RenderContext | null = null
+  private viewerEngine: ViewerEngine | null = null
 
   initialize(context: RenderContext): void {
     this.context = context
@@ -15,6 +18,14 @@ export class RenderEngine {
     return this.context
   }
 
+  setViewerEngine(engine: ViewerEngine | null): void {
+    this.viewerEngine = engine
+  }
+
+  getViewerEngine(): ViewerEngine | null {
+    return this.viewerEngine
+  }
+
   render(): void {
     if (!this.initialized || !this.context) {
       throw new Error('Render engine not initialized')
@@ -25,9 +36,12 @@ export class RenderEngine {
     if (!this.context) return
     this.context.width = width
     this.context.height = height
+    this.viewerEngine?.resize(width, height)
   }
 
   dispose(): void {
+    this.viewerEngine?.dispose()
+    this.viewerEngine = null
     this.context = null
     this.initialized = false
   }

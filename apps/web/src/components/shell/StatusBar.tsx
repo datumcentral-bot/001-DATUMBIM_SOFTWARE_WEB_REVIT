@@ -7,6 +7,8 @@ import { useDesignSlice } from '@/store/slices/designSlice'
 export default function StatusBar() {
   const { activeView, project } = useShellStore()
   const selectedIds = useDesignSlice((state) => state.getSelectedElements())
+  const viewerEngine = useDesignSlice((state) => state.getViewerEngine())
+  const viewerState = viewerEngine?.getState()
 
   return (
     <div className="h-7 bg-datumbim-ribbon border-t border-datumbim-border flex items-center px-3 text-[11px] text-datumbim-textSecondary select-none">
@@ -23,7 +25,8 @@ export default function StatusBar() {
         {selectedIds.length > 0 && (
           <span>{selectedIds.length} selected</span>
         )}
-        <span>Nav: Pan</span>
+        <span>Nav: {viewerState?.cameraMode ?? 'Pan'}</span>
+        <span>Render: {viewerState?.renderMode ?? 'shaded'}</span>
         <span>Units: mm</span>
       </div>
       <div className="ml-auto flex items-center gap-4">
@@ -33,7 +36,7 @@ export default function StatusBar() {
             {project.isModified && <span className="ml-1 text-yellow-500">●</span>}
           </span>
         )}
-        <span>TASK 006F</span>
+        <span>TASK 007F</span>
       </div>
     </div>
   )
