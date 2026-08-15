@@ -1,5 +1,6 @@
 import { useDesignSlice } from '@/store/slices/designSlice'
 import type { DesignSliceState } from '@/store/slices/designSlice'
+import { useShellStore } from '@/store/shellStore'
 import { levelApi } from '@/lib/api/levels'
 import type { LevelResponse } from '@/types/api'
 
@@ -64,5 +65,11 @@ export class DesignCommands {
 
   static navigateToView = async (_ctx: DesignCommandContext, viewId: string) => {
     return { success: true, message: `Navigated to view: ${viewId}` }
+  }
+
+  static openFileImport = async (_ctx: DesignCommandContext) => {
+    const shell = useShellStore.getState()
+    shell.openDialog({ id: 'file-import', title: 'Import File', content: null })
+    return { success: true, message: 'File import dialog opened' }
   }
 }

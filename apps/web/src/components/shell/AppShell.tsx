@@ -15,6 +15,7 @@ import Dialog from './Dialog'
 import ContextMenu from './ContextMenu'
 import NavigationBreadcrumb from './NavigationBreadcrumb'
 import KeyboardShortcutsHelp from './KeyboardShortcutsHelp'
+import FileImportDialog from './FileImportDialog'
 
 export default function AppShell() {
   return (
@@ -33,6 +34,7 @@ export default function AppShell() {
       <Search />
       <CommandLauncher />
       <Dialog />
+      <FileImportDialog />
       <ContextMenu />
       <KeyboardShortcutsHelp />
     </div>

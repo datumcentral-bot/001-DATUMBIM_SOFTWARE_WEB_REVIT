@@ -8,4 +8,4 @@ def test_health():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "ok"
-    assert data["task"] == "000"
+    assert data["task"] == "005"

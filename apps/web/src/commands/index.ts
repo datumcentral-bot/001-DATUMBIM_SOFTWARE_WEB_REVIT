@@ -157,6 +157,23 @@ const DESIGN_COMMANDS = [
       DesignCommands.setActiveView(ctx, viewId ?? ''),
   },
   {
+    id: 'file.import',
+    name: 'file.import',
+    label: 'Import',
+    description: 'Import a file into the project',
+    category: 'file',
+    tab: 'datumbim',
+    panel: 'core',
+    commandType: 'button' as const,
+    implementationTarget: 'TASK 005',
+    action: 'file.import',
+    enabled: true,
+    visible: true,
+    availability: ['always'],
+    handler: async (_command: typeof ALL_COMMANDS[0], ctx: DesignCommandContext) =>
+      DesignCommands.openFileImport(ctx),
+  },
+  {
     id: 'nav.goToLevel',
     name: 'nav.goToLevel',
     label: 'Go to Level',
