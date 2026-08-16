@@ -22,9 +22,29 @@ _revit_state = {
 }
 
 
+def _get_connector_status() -> dict:
+    try:
+        from revit_connector.connector import RevitConnector
+        connector = RevitConnector()
+        state = connector.detect()
+        _revit_state["connection_state"] = state.value
+        _revit_state["api_available"] = connector.api_bridge.available
+        _revit_state["pyrevit_available"] = connector.pyrevit_bridge.available
+        _revit_state["dynamo_available"] = connector.dynamo_bridge.available
+        _revit_state["ui_available"] = connector.ui_bridge.available
+        _revit_state["capabilities"] = connector.get_capabilities()
+        if state in ("connected", "document_open", "ready"):
+            doc = connector.get_document()
+            if doc:
+                _revit_state["active_document"] = doc
+        return _revit_state
+    except ImportError:
+        return _revit_state
+
+
 @router.get("/status")
 async def revit_status() -> dict:
-    return {"status": _revit_state}
+    return {"status": _get_connector_status()}
 
 
 @router.get("/categories")
