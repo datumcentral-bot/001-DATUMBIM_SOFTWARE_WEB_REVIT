@@ -30,6 +30,18 @@ from desktop_agent.permissions import PermissionEngine
 from desktop_agent.session_manager import SessionManager
 
 
+try:
+    from ai_engine.providers.mock import MockAIProvider
+    from ai_engine.registry import AIProviderRegistry
+    from ai_engine.router import AIRouter
+    from ai_engine.vision import VisionEngine
+    from ai_engine.vision_models import VisionContext, VisionRequest
+
+    AI_ENGINE_AVAILABLE = True
+except ImportError:
+    AI_ENGINE_AVAILABLE = False
+
+
 class DesktopAgent:
     def __init__(self) -> None:
         self.agent_id: str | None = None
@@ -48,6 +60,14 @@ class DesktopAgent:
         )
         self.control_engine = ControlEngine(session_manager=self.session_manager, adapter=MockControlAdapter())
         self.observation_engine = ObservationEngine(provider=WindowsObservationProvider())
+        self._ai_registry: AIProviderRegistry | None = None
+        self._ai_router: AIRouter | None = None
+        self._vision_engine: VisionEngine | None = None
+        if AI_ENGINE_AVAILABLE:
+            self._ai_registry = AIProviderRegistry()
+            self._ai_registry.register(MockAIProvider())
+            self._ai_router = AIRouter(registry=self._ai_registry)
+            self._vision_engine = VisionEngine(registry=self._ai_registry)
 
     def register(self) -> AgentRegistration:
         machine_name = get_machine_name()
@@ -287,3 +307,86 @@ class DesktopAgent:
                 )
             )
         return results
+
+    def list_ai_providers(self) -> list[dict]:
+        if not AI_ENGINE_AVAILABLE or not self._ai_registry:
+            return []
+        return [
+            {
+                "provider_id": provider_id,
+                "display_name": provider.display_name,
+                "status": provider.status,
+                "supports_vision": provider.supports_vision(),
+                "supports_tools": provider.supports_tools(),
+            }
+            for provider_id, provider in self._ai_registry._providers.items()
+        ]
+
+    def list_ai_models(self) -> list[dict]:
+        if not AI_ENGINE_AVAILABLE or not self._ai_registry:
+            return []
+        return [
+            {
+                "provider_id": model.provider_id,
+                "model_id": model.model_id,
+                "display_name": model.display_name,
+                "capabilities": [cap.value for cap in model.capabilities],
+                "vision_supported": model.vision_supported,
+                "tool_calling_supported": model.tool_calling_supported,
+                "structured_output_supported": model.structured_output_supported,
+                "local": model.local,
+                "availability": model.availability.value if hasattr(model.availability, "value") else str(model.availability),
+            }
+            for model in self._ai_registry.list_models()
+        ]
+
+    def get_ai_health(self) -> dict:
+        if not AI_ENGINE_AVAILABLE or not self._ai_registry:
+            return {"error": "AI engine not available"}
+        return {
+            provider_id: {
+                "status": health.status.value if hasattr(health.status, "value") else str(health.status),
+                "capabilities": health.capabilities.model_dump(),
+                "available_models": [
+                    {
+                        "model_id": model.model_id,
+                        "display_name": model.display_name,
+                        "vision_supported": model.vision_supported,
+                    }
+                    for model in health.available_models
+                ],
+            }
+            for provider_id, health in self._ai_registry.health().items()
+        }
+
+    def analyze_observation_with_ai(self, observation_id: str, provider_id: str | None = None, model_id: str | None = None, instructions: str | None = None) -> dict:
+        if not AI_ENGINE_AVAILABLE or not self._vision_engine:
+            return {"error": "AI engine not available"}
+        if not self.health:
+            raise RuntimeError("Agent not registered")
+        request = VisionRequest(
+            request_id=str(__import__("uuid").uuid4()),
+            observation_id=observation_id,
+            provider_id=provider_id,
+            model_id=model_id,
+            instructions=instructions,
+            detect_ui=True,
+            detect_text=True,
+            detect_regions=True,
+            describe_application=True,
+            generate_action_hints=True,
+        )
+        response = self._vision_engine.analyze(request)
+        self.audit.log(
+            AuditLogEntry(
+                id=request.request_id,
+                agent_id=self.agent_id or "unknown",
+                action="ai_vision",
+                target=observation_id,
+                parameters={"provider_id": provider_id, "model_id": model_id},
+                result=response.status,
+                timestamp=datetime.now(tz=UTC),
+                error=response.error,
+            )
+        )
+        return response.model_dump()

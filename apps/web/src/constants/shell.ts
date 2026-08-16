@@ -4,6 +4,7 @@ export const RIBBON_TABS = [
   { id: 'sessions', label: 'Sessions' },
   { id: 'observation', label: 'Observation' },
   { id: 'control', label: 'Control' },
+  { id: 'ai', label: 'AI' },
   { id: 'agents', label: 'Agents' },
   { id: 'workflows', label: 'Workflows' },
   { id: 'settings', label: 'Settings' },
@@ -120,6 +121,26 @@ export const RIBBON_PANELS: Record<string, { id: string; label: string; items: {
       ],
     },
   ],
+  ai: [
+    {
+      id: 'providers',
+      label: 'Providers',
+      items: [
+        { id: 'ai-providers', label: 'Providers', icon: '🧠' },
+        { id: 'ai-models', label: 'Models', icon: '📦' },
+        { id: 'ai-health', label: 'Health', icon: '💓' },
+      ],
+    },
+    {
+      id: 'vision',
+      label: 'Vision',
+      items: [
+        { id: 'analyze-observation', label: 'Analyze Observation', icon: '👁️' },
+        { id: 'detect-ui', label: 'Detect UI', icon: '🖥️' },
+        { id: 'detect-text', label: 'Detect Text', icon: '📝' },
+      ],
+    },
+  ],
   settings: [
     {
       id: 'config',
@@ -133,7 +154,7 @@ export const RIBBON_PANELS: Record<string, { id: string; label: string; items: {
   ],
 }
 
-export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' }[] = [
+export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' }[] = [
   { id: 'view-3d', label: '{3D}', type: '3d' },
   { id: 'floor-plan', label: 'Floor Plan', type: 'floor-plan' },
   { id: 'ceiling-plan', label: 'Ceiling Plan', type: 'ceiling-plan' },
@@ -147,6 +168,7 @@ export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor
   { id: 'sessions', label: 'Sessions', type: 'sessions' },
   { id: 'observation', label: 'Observation', type: 'observation' },
   { id: 'control', label: 'Control', type: 'control' },
+  { id: 'ai', label: 'AI', type: 'ai' },
 ]
 
 export const COMMANDS = [
