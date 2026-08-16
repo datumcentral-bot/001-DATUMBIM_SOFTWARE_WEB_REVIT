@@ -13,6 +13,7 @@ from datumbim.routes.sessions import router as sessions_router
 from datumbim.routes.observation import router as observation_router
 from datumbim.routes.control import router as control_router
 from datumbim.routes.ai import router as ai_router
+from datumbim.routes.planner import router as planner_router
 
 app = FastAPI(
     title="DATUMBIM API",
@@ -40,6 +41,7 @@ app.include_router(sessions_router)
 app.include_router(observation_router)
 app.include_router(control_router)
 app.include_router(ai_router)
+app.include_router(planner_router)
 
 @app.get("/health")
 async def health() -> dict[str, str]:

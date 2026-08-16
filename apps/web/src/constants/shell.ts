@@ -5,6 +5,7 @@ export const RIBBON_TABS = [
   { id: 'observation', label: 'Observation' },
   { id: 'control', label: 'Control' },
   { id: 'ai', label: 'AI' },
+  { id: 'planner', label: 'Planner' },
   { id: 'agents', label: 'Agents' },
   { id: 'workflows', label: 'Workflows' },
   { id: 'settings', label: 'Settings' },
@@ -141,6 +142,17 @@ export const RIBBON_PANELS: Record<string, { id: string; label: string; items: {
       ],
     },
   ],
+  planner: [
+    {
+      id: 'planning',
+      label: 'Planning',
+      items: [
+        { id: 'create-plan', label: 'Create Plan', icon: '📝' },
+        { id: 'validate-plan', label: 'Validate Plan', icon: '✅' },
+        { id: 'explain-plan', label: 'Explain Plan', icon: '📖' },
+      ],
+    },
+  ],
   settings: [
     {
       id: 'config',
@@ -154,7 +166,7 @@ export const RIBBON_PANELS: Record<string, { id: string; label: string; items: {
   ],
 }
 
-export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' }[] = [
+export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' }[] = [
   { id: 'view-3d', label: '{3D}', type: '3d' },
   { id: 'floor-plan', label: 'Floor Plan', type: 'floor-plan' },
   { id: 'ceiling-plan', label: 'Ceiling Plan', type: 'ceiling-plan' },
@@ -169,6 +181,7 @@ export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor
   { id: 'observation', label: 'Observation', type: 'observation' },
   { id: 'control', label: 'Control', type: 'control' },
   { id: 'ai', label: 'AI', type: 'ai' },
+  { id: 'planner', label: 'Planner', type: 'planner' },
 ]
 
 export const COMMANDS = [

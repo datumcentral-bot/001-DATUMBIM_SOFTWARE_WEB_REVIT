@@ -390,3 +390,41 @@ class DesktopAgent:
             )
         )
         return response.model_dump()
+
+    def plan_goal(self, user_request: str, application_id: str | None = None, session_id: str | None = None, dry_run: bool = False) -> dict:
+        try:
+            from ai_planner.planner import PlannerEngine
+            from ai_planner.planners.mock import MockPlannerProvider
+            from ai_planner.models import GoalRequest, PlanningContext
+        except ImportError:
+            return {"error": "AI planner not available"}
+        if not self.health:
+            raise RuntimeError("Agent not registered")
+        context = PlanningContext(
+            application_id=application_id,
+            session_id=session_id,
+        )
+        goal = GoalRequest(
+            goal_id=str(__import__("uuid").uuid4()),
+            user_request=user_request,
+            session_id=session_id,
+            application_id=application_id,
+            requested_by=self.agent_id or "system",
+            context=context,
+            dry_run=dry_run,
+            timestamp=datetime.now(tz=UTC),
+        )
+        engine = PlannerEngine(provider=MockPlannerProvider())
+        plan = engine.plan(goal)
+        self.audit.log(
+            AuditLogEntry(
+                id=plan.plan_id,
+                agent_id=self.agent_id or "unknown",
+                action="ai_plan",
+                target=user_request,
+                parameters={"application_id": application_id, "session_id": session_id, "dry_run": dry_run},
+                result=plan.status.value,
+                timestamp=datetime.now(tz=UTC),
+            )
+        )
+        return plan.model_dump()
