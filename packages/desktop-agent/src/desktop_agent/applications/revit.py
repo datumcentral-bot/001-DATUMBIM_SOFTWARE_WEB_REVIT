@@ -16,6 +16,15 @@ try:
 except ImportError:
     REVIT_MODEL_AVAILABLE = False
 
+try:
+    from revit_connector.connector import RevitConnector
+    from revit_connector.models import RevitConnectionState as RevitConnectorConnectionState
+
+    REVIT_CONNECTOR_AVAILABLE = True
+except ImportError:
+    REVIT_CONNECTOR_AVAILABLE = False
+    RevitConnectorConnectionState = None
+
 
 class RevitAdapter(ApplicationAdapter):
     application_id = "revit"
@@ -29,11 +38,22 @@ class RevitAdapter(ApplicationAdapter):
         self._dynamo_available = False
         self._discovery = RevitDiscovery() if REVIT_MODEL_AVAILABLE else None
         self._registry = RevitCapabilityRegistry() if REVIT_MODEL_AVAILABLE else None
+        self._connector = RevitConnector() if REVIT_CONNECTOR_AVAILABLE else None
 
     def identify(self) -> ActionResult:
+        if REVIT_CONNECTOR_AVAILABLE and self._connector:
+            state = self._connector.detect()
+            return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result=f"Revit {state.value}")
         return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result="Revit adapter identified")
 
     def connect(self) -> ActionResult:
+        if REVIT_CONNECTOR_AVAILABLE and self._connector:
+            result = self._connector.connect()
+            self._connected = result.get("state") in ("connected", "document_open", "ready")
+            self._api_available = result.get("api_available", False)
+            self._pyrevit_available = result.get("pyrevit_available", False)
+            self._dynamo_available = result.get("dynamo_available", False)
+            return ActionResult(action_id="", status="completed" if self._connected else "failed", started_at=datetime.now(tz=UTC), result=result)
         if not self._is_running():
             return ActionResult(action_id="", status="failed", started_at=datetime.now(tz=UTC), error=ConnectionState.NOT_RUNNING.value)
         self._connected = True
@@ -43,9 +63,16 @@ class RevitAdapter(ApplicationAdapter):
 
     def disconnect(self) -> ActionResult:
         self._connected = False
+        if REVIT_CONNECTOR_AVAILABLE and self._connector:
+            self._connector.disconnect()
         return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result="disconnected")
 
     def is_available(self) -> ActionResult:
+        if self.application and not self.application.running:
+            return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result=ConnectionState.NOT_RUNNING.value)
+        if REVIT_CONNECTOR_AVAILABLE and self._connector:
+            state = self._connector.detect()
+            return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result=state.value)
         if self._is_running():
             return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result=ConnectionState.AVAILABLE.value)
         return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result=ConnectionState.NOT_RUNNING.value)
@@ -82,11 +109,19 @@ class RevitAdapter(ApplicationAdapter):
     def get_active_document(self) -> ActionResult:
         if not self._connected:
             return ActionResult(action_id="", status="failed", started_at=datetime.now(tz=UTC), error="Not connected")
+        if REVIT_CONNECTOR_AVAILABLE and self._connector:
+            result = self._connector.get_document()
+            if result:
+                return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result=result)
         return ActionResult(action_id="", status="failed", started_at=datetime.now(tz=UTC), error=ConnectionState.NOT_IMPLEMENTED.value)
 
     def get_active_window(self) -> ActionResult | None:
         if not self.application:
             return None
+        if REVIT_CONNECTOR_AVAILABLE and self._connector:
+            title = self._connector.ui_bridge.get_window_title() if self._connector.ui_bridge else None
+            if title:
+                return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result=title)
         return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result=str(self.application.window_title))
 
     def observe(self) -> ActionResult:
@@ -103,6 +138,13 @@ class RevitAdapter(ApplicationAdapter):
         return ActionResult(action_id=request.action_id, status="completed", started_at=datetime.now(tz=UTC), result="verification not implemented")
 
     def _is_running(self) -> bool:
+        if REVIT_CONNECTOR_AVAILABLE and self._connector and RevitConnectorConnectionState:
+            return self._connector.detect() in (
+                RevitConnectorConnectionState.RUNNING,
+                RevitConnectorConnectionState.CONNECTED,
+                RevitConnectorConnectionState.READY,
+                RevitConnectorConnectionState.DOCUMENT_OPEN,
+            )
         if self.application:
             return self.application.running
         return False

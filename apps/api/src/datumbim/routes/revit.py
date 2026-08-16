@@ -15,6 +15,10 @@ _revit_state = {
     "levels": [],
     "views": [],
     "capabilities": [],
+    "pyrevit_available": False,
+    "dynamo_available": False,
+    "api_available": False,
+    "ui_available": False,
 }
 
 
@@ -63,10 +67,24 @@ async def revit_capabilities() -> dict:
 
 @router.post("/connect")
 async def revit_connect() -> dict:
-    _revit_state["connection_state"] = "not_running"
-    return {"status": _revit_state["connection_state"], "message": "Revit not running"}
+    try:
+        from revit_connector.connector import RevitConnector
+        connector = RevitConnector()
+        result = connector.connect()
+        _revit_state.update(result)
+        return {"status": _revit_state["connection_state"], "message": _revit_state.get("window_title", "Revit")}
+    except ImportError:
+        _revit_state["connection_state"] = "not_implemented"
+        return {"status": "not_implemented", "message": "Revit connector not available"}
 
 
 @router.post("/discover")
 async def revit_discover() -> dict:
-    return {"status": "not_running", "discovered": False}
+    try:
+        from revit_connector.connector import RevitConnector
+        connector = RevitConnector()
+        state = connector.detect()
+        _revit_state["connection_state"] = state.value
+        return {"status": state.value, "discovered": state in ("running", "connected", "document_open")}
+    except ImportError:
+        return {"status": "not_implemented", "discovered": False}
