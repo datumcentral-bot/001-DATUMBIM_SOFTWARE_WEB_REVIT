@@ -168,6 +168,7 @@ export const useShellStore = create<ShellState>((set, get) => ({
     { id: 'section-1', name: 'Section 1', type: 'section', discipline: 'architecture', visibilityState: true, activeState: false },
     { id: 'control', name: 'Control', type: 'control', discipline: 'generic', visibilityState: true, activeState: false },
     { id: 'live-application', name: 'Live Application', type: 'live-application', discipline: 'generic', visibilityState: true, activeState: false },
+    { id: 'integrations', name: 'Integrations', type: 'integrations', discipline: 'generic', visibilityState: true, activeState: false },
   ],
   activeView: null,
   setActiveView: (viewId) => {
