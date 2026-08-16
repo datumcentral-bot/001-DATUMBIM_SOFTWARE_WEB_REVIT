@@ -19,13 +19,28 @@ class CaptureMode(str, Enum):
     application = "application"
 
 
+def _get_observation_engine():
+    try:
+        from desktop_agent.observation.engine import ObservationEngine
+        from desktop_agent.observation.providers.mock import MockObservationProvider
+        return ObservationEngine(provider=MockObservationProvider())
+    except ImportError:
+        return None
+
+
 @router.get("/displays")
 async def list_displays() -> dict:
+    engine = _get_observation_engine()
+    if engine:
+        return {"displays": [d.__dict__ if hasattr(d, '__dict__') else str(d) for d in engine.list_displays()]}
     return {"displays": []}
 
 
 @router.get("/windows")
 async def list_windows() -> dict:
+    engine = _get_observation_engine()
+    if engine:
+        return {"windows": [w.__dict__ if hasattr(w, '__dict__') else str(w) for w in engine.list_windows()]}
     return {"windows": []}
 
 
@@ -57,20 +72,57 @@ async def capture_observation(request: dict) -> dict:
             metadata={"source": "observation"},
         )
         _sessions[session_id] = session
-    capture = {
-        "capture_id": str(__import__("uuid").uuid4()),
-        "session_id": session_id,
-        "application_id": application_id,
-        "target_type": target_type,
-        "target_id": target_id,
-        "timestamp": datetime.now(tz=UTC).isoformat(),
-        "width": 0,
-        "height": 0,
-        "format": "png",
-        "status": "completed",
-        "provider": "mock",
-        "metadata": {"source": "stub"},
-    }
+    engine = _get_observation_engine()
+    if engine:
+        from desktop_agent.observation.models import CaptureMode as CMode
+        from desktop_agent.observation.models import ObservationRequest
+        mode_map = {
+            "full_screen": CMode.FULL_SCREEN,
+            "display": CMode.DISPLAY,
+            "window": CMode.WINDOW,
+            "region": CMode.REGION,
+            "application": CMode.APPLICATION,
+        }
+        obs_request = ObservationRequest(
+            observation_id=str(__import__("uuid").uuid4()),
+            session_id=session_id,
+            application_id=application_id,
+            target_type=mode_map.get(target_type, CMode.FULL_SCREEN),
+            target_id=target_id,
+            timestamp=datetime.now(tz=UTC),
+        )
+        result = engine.capture(obs_request)
+        capture = {
+            "capture_id": result.observation_id,
+            "session_id": session_id,
+            "application_id": application_id,
+            "target_type": target_type,
+            "target_id": target_id,
+            "timestamp": datetime.now(tz=UTC).isoformat(),
+            "width": result.width,
+            "height": result.height,
+            "format": result.image_format,
+            "status": result.status.value if hasattr(result.status, "value") else str(result.status),
+            "provider": result.provider,
+            "metadata": result.metadata,
+            "image_reference": result.image_reference,
+            "error": result.error,
+        }
+    else:
+        capture = {
+            "capture_id": str(__import__("uuid").uuid4()),
+            "session_id": session_id,
+            "application_id": application_id,
+            "target_type": target_type,
+            "target_id": target_id,
+            "timestamp": datetime.now(tz=UTC).isoformat(),
+            "width": 0,
+            "height": 0,
+            "format": "png",
+            "status": "completed",
+            "provider": "mock",
+            "metadata": {"source": "stub"},
+        }
     _captures.setdefault(session_id, []).append(capture)
     return {"capture": capture}
 
