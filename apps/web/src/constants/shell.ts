@@ -6,6 +6,7 @@ export const RIBBON_TABS = [
   { id: 'control', label: 'Control' },
   { id: 'ai', label: 'AI' },
   { id: 'planner', label: 'Planner' },
+  { id: 'revit', label: 'Revit' },
   { id: 'agents', label: 'Agents' },
   { id: 'workflows', label: 'Workflows' },
   { id: 'settings', label: 'Settings' },
@@ -153,6 +154,28 @@ export const RIBBON_PANELS: Record<string, { id: string; label: string; items: {
       ],
     },
   ],
+  revit: [
+    {
+      id: 'intelligence',
+      label: 'Intelligence',
+      items: [
+        { id: 'revit-status', label: 'Status', icon: '📡' },
+        { id: 'revit-categories', label: 'Categories', icon: '📂' },
+        { id: 'revit-elements', label: 'Elements', icon: '🧱' },
+        { id: 'revit-families', label: 'Families', icon: '📦' },
+        { id: 'revit-views', label: 'Views', icon: '👁️' },
+      ],
+    },
+    {
+      id: 'operations',
+      label: 'Operations',
+      items: [
+        { id: 'revit-connect', label: 'Connect', icon: '🔌' },
+        { id: 'revit-discover', label: 'Discover', icon: '🔍' },
+        { id: 'revit-query', label: 'Query', icon: '💬' },
+      ],
+    },
+  ],
   settings: [
     {
       id: 'config',
@@ -166,7 +189,7 @@ export const RIBBON_PANELS: Record<string, { id: string; label: string; items: {
   ],
 }
 
-export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' }[] = [
+export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' | 'revit' }[] = [
   { id: 'view-3d', label: '{3D}', type: '3d' },
   { id: 'floor-plan', label: 'Floor Plan', type: 'floor-plan' },
   { id: 'ceiling-plan', label: 'Ceiling Plan', type: 'ceiling-plan' },
@@ -182,6 +205,7 @@ export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor
   { id: 'control', label: 'Control', type: 'control' },
   { id: 'ai', label: 'AI', type: 'ai' },
   { id: 'planner', label: 'Planner', type: 'planner' },
+  { id: 'revit', label: 'Revit', type: 'revit' },
 ]
 
 export const COMMANDS = [

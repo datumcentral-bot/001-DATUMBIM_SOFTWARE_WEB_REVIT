@@ -7,6 +7,15 @@ from desktop_agent.applications.base import ApplicationAdapter, ApplicationCapab
 from desktop_agent.control.models import ActionRequest, ActionResult
 from desktop_agent.models import ApplicationInfo
 
+try:
+    from revit_model.discovery import RevitDiscovery
+    from revit_model.models import RevitConnectionState, RevitModelInfo
+    from revit_model.registry import RevitCapabilityRegistry
+
+    REVIT_MODEL_AVAILABLE = True
+except ImportError:
+    REVIT_MODEL_AVAILABLE = False
+
 
 class RevitAdapter(ApplicationAdapter):
     application_id = "revit"
@@ -18,6 +27,8 @@ class RevitAdapter(ApplicationAdapter):
         self._api_available = False
         self._pyrevit_available = False
         self._dynamo_available = False
+        self._discovery = RevitDiscovery() if REVIT_MODEL_AVAILABLE else None
+        self._registry = RevitCapabilityRegistry() if REVIT_MODEL_AVAILABLE else None
 
     def identify(self) -> ActionResult:
         return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result="Revit adapter identified")
@@ -26,6 +37,8 @@ class RevitAdapter(ApplicationAdapter):
         if not self._is_running():
             return ActionResult(action_id="", status="failed", started_at=datetime.now(tz=UTC), error=ConnectionState.NOT_RUNNING.value)
         self._connected = True
+        if REVIT_MODEL_AVAILABLE and self._registry:
+            self._register_default_capabilities()
         return ActionResult(action_id="", status="completed", started_at=datetime.now(tz=UTC), result="connected to Revit")
 
     def disconnect(self) -> ActionResult:
@@ -44,15 +57,18 @@ class RevitAdapter(ApplicationAdapter):
             state = ConnectionState.API_UNAVAILABLE
         else:
             state = ConnectionState.CONNECTED if self._connected else ConnectionState.AVAILABLE
+        capabilities = [
+            "ui_control", "document", "model", "view", "selection",
+            "elements", "parameters", "families", "sheets", "export", "import",
+        ]
+        if REVIT_MODEL_AVAILABLE and self._registry:
+            capabilities = [c.name for c in self._registry.list_capabilities() if c.available] or capabilities
         return ApplicationCapability(
             application_id=self.application_id,
             application_name=self.application_name,
             adapter_type="revit",
             connection_state=state,
-            capabilities=[
-                "ui_control", "document", "model", "view", "selection",
-                "elements", "parameters", "families", "sheets", "export", "import",
-            ],
+            capabilities=capabilities,
             supported_actions=[
                 "ui_control", "document_open", "document_save", "element_select",
                 "view_activate", "parameter_read", "parameter_write",
@@ -90,3 +106,32 @@ class RevitAdapter(ApplicationAdapter):
         if self.application:
             return self.application.running
         return False
+
+    def _register_default_capabilities(self) -> None:
+        if not self._registry:
+            return
+        defaults = [
+            ("ui_control", "UI Control", "element", True, True, "low", ["window_id", "action"]),
+            ("document", "Document", "document", True, True, "low", ["document_path"]),
+            ("model", "Model", "element", True, True, "medium", ["element_id"]),
+            ("view", "View", "view", True, True, "low", ["view_id"]),
+            ("selection", "Selection", "selection", True, True, "low", ["element_ids"]),
+            ("elements", "Elements", "element", True, True, "medium", ["category_id"]),
+            ("parameters", "Parameters", "parameter", True, False, "low", ["element_id", "parameter_name"]),
+            ("families", "Families", "family", True, True, "medium", ["family_id"]),
+            ("sheets", "Sheets", "document", True, True, "low", ["sheet_id"]),
+            ("export", "Export", "document", True, True, "medium", ["document_path", "format"]),
+            ("import", "Import", "document", True, True, "medium", ["file_path"]),
+        ]
+        for capability_id, name, group, available, requires_txn, risk, params in defaults:
+            self._registry.register_capability(
+                RevitCapability(
+                    capability_id=capability_id,
+                    name=name,
+                    group=group,
+                    available=available,
+                    requires_transaction=requires_txn,
+                    risk_level=risk,
+                    parameters=params,
+                )
+            )
