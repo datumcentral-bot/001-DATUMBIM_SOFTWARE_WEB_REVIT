@@ -21,6 +21,10 @@ from desktop_agent.models import (
     Heartbeat,
     SessionInfo,
 )
+from desktop_agent.observation.engine import ObservationEngine
+from desktop_agent.observation.models import CaptureMode, ObservationRequest, Region
+from desktop_agent.observation.providers.mock import MockObservationProvider
+from desktop_agent.observation.providers.windows import WindowsObservationProvider
 from desktop_agent.pairing import PairingManager
 from desktop_agent.permissions import PermissionEngine
 from desktop_agent.session_manager import SessionManager
@@ -43,6 +47,7 @@ class DesktopAgent:
             window_discovery=self.window_discovery,
         )
         self.control_engine = ControlEngine(session_manager=self.session_manager, adapter=MockControlAdapter())
+        self.observation_engine = ObservationEngine(provider=WindowsObservationProvider())
 
     def register(self) -> AgentRegistration:
         machine_name = get_machine_name()
@@ -90,6 +95,55 @@ class DesktopAgent:
 
     def get_sessions(self) -> list[SessionInfo]:
         return self.session_manager.get_sessions()
+
+    def list_displays(self) -> list[dict]:
+        return [display.model_dump() for display in self.observation_engine.list_displays()]
+
+    def list_windows(self) -> list[dict]:
+        return [window.model_dump() for window in self.observation_engine.list_windows()]
+
+    def capture_screen(self, session_id: str, application_id: str, requested_by: str = "system") -> dict:
+        return self._capture(session_id, application_id, requested_by, CaptureMode.FULL_SCREEN)
+
+    def capture_display(self, session_id: str, application_id: str, target_id: str, requested_by: str = "system") -> dict:
+        return self._capture(session_id, application_id, requested_by, CaptureMode.DISPLAY, target_id=target_id)
+
+    def capture_window(self, session_id: str, application_id: str, target_id: str, requested_by: str = "system") -> dict:
+        return self._capture(session_id, application_id, requested_by, CaptureMode.WINDOW, target_id=target_id)
+
+    def capture_region(self, session_id: str, application_id: str, region: Any, requested_by: str = "system") -> dict:
+        return self._capture(session_id, application_id, requested_by, CaptureMode.REGION, region=region)
+
+    def capture_application(self, session_id: str, application_id: str, requested_by: str = "system") -> dict:
+        return self._capture(session_id, application_id, requested_by, CaptureMode.APPLICATION)
+
+    def _capture(self, session_id: str, application_id: str, requested_by: str, target_type: CaptureMode, target_id: str | None = None, region: Any = None) -> dict:
+        if not self.health:
+            raise RuntimeError("Agent not registered")
+        request = ObservationRequest(
+            observation_id=str(__import__("uuid").uuid4()),
+            session_id=session_id,
+            application_id=application_id,
+            target_type=target_type,
+            target_id=target_id,
+            region=region,
+            requested_by=requested_by,
+            timestamp=datetime.now(tz=UTC),
+        )
+        result = self.observation_engine.capture(request)
+        self.audit.log(
+            AuditLogEntry(
+                id=request.observation_id,
+                agent_id=self.agent_id or "unknown",
+                action="observation",
+                target=target_id or target_type.value,
+                parameters={},
+                result=result.status.value if hasattr(result.status, "value") else str(result.status),
+                timestamp=datetime.now(tz=UTC),
+                error=result.error,
+            )
+        )
+        return result.model_dump()
 
 
     def execute_command(self, request: CommandRequest) -> CommandResult:
