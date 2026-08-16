@@ -3,6 +3,7 @@ export const RIBBON_TABS = [
   { id: 'applications', label: 'Applications' },
   { id: 'sessions', label: 'Sessions' },
   { id: 'observation', label: 'Observation' },
+  { id: 'live-application', label: 'Live Application' },
   { id: 'control', label: 'Control' },
   { id: 'ai', label: 'AI' },
   { id: 'planner', label: 'Planner' },
@@ -189,7 +190,7 @@ export const RIBBON_PANELS: Record<string, { id: string; label: string; items: {
   ],
 }
 
-export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' | 'revit' }[] = [
+export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' | 'revit' | 'live-application' }[] = [
   { id: 'view-3d', label: '{3D}', type: '3d' },
   { id: 'floor-plan', label: 'Floor Plan', type: 'floor-plan' },
   { id: 'ceiling-plan', label: 'Ceiling Plan', type: 'ceiling-plan' },
@@ -206,6 +207,7 @@ export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor
   { id: 'ai', label: 'AI', type: 'ai' },
   { id: 'planner', label: 'Planner', type: 'planner' },
   { id: 'revit', label: 'Revit', type: 'revit' },
+  { id: 'live-application', label: 'Live Application', type: 'live-application' },
 ]
 
 export const COMMANDS = [

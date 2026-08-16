@@ -9,6 +9,7 @@ import ApplicationsScreen from '@/components/connectors/ApplicationsScreen'
 import SessionsScreen from '@/components/connectors/SessionsScreen'
 import ObservationScreen from '@/components/connectors/ObservationScreen'
 import ControlScreen from '@/components/control/ControlScreen'
+import LiveApplicationScreen from '@/components/observation/LiveApplicationScreen'
 import { useShellStore } from '@/store/shellStore'
 import { useDesignSlice } from '@/store/slices/designSlice'
 
@@ -43,6 +44,8 @@ export default function Workspace() {
           <ObservationScreen />
         ) : viewType === 'control' ? (
           <ControlScreen />
+        ) : viewType === 'live-application' ? (
+          <LiveApplicationScreen />
         ) : (
           <>
             <Canvas />
