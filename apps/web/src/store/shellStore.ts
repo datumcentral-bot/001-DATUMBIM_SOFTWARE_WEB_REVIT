@@ -166,6 +166,7 @@ export const useShellStore = create<ShellState>((set, get) => ({
     { id: 'ceiling-plan', name: 'Ceiling Plan', type: 'ceiling-plan', discipline: 'architecture', visibilityState: true, activeState: false },
     { id: 'elevation-1', name: 'Elevation 1', type: 'elevation', discipline: 'architecture', visibilityState: true, activeState: false },
     { id: 'section-1', name: 'Section 1', type: 'section', discipline: 'architecture', visibilityState: true, activeState: false },
+    { id: 'control', name: 'Control', type: 'control', discipline: 'generic', visibilityState: true, activeState: false },
   ],
   activeView: null,
   setActiveView: (viewId) => {

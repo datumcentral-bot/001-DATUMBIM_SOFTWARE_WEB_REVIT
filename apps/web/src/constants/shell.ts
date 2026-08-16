@@ -1,156 +1,139 @@
 export const RIBBON_TABS = [
-  { id: 'architecture', label: 'Architecture' },
-  { id: 'structure', label: 'Structure' },
-  { id: 'mep', label: 'MEP' },
-  { id: 'insert', label: 'Insert' },
-  { id: 'annotate', label: 'Annotate' },
-  { id: 'view', label: 'View' },
-  { id: 'manage', label: 'Manage' },
-  { id: 'collaborate', label: 'Collaborate' },
-  { id: 'analyze', label: 'Analyze' },
-  { id: 'automate', label: 'Automate' },
-  { id: 'datumbim', label: 'DATUMBIM' },
+  { id: 'home', label: 'Home' },
+  { id: 'applications', label: 'Applications' },
+  { id: 'sessions', label: 'Sessions' },
+  { id: 'observation', label: 'Observation' },
+  { id: 'control', label: 'Control' },
+  { id: 'agents', label: 'Agents' },
+  { id: 'workflows', label: 'Workflows' },
+  { id: 'settings', label: 'Settings' },
 ] as const
 
 export const RIBBON_PANELS: Record<string, { id: string; label: string; items: { id: string; label: string; icon?: string }[] }[]> = {
-  architecture: [
+  home: [
     {
-      id: 'build',
-      label: 'Build',
+      id: 'dashboard',
+      label: 'Dashboard',
       items: [
-        { id: 'wall', label: 'Wall', icon: '📐' },
-        { id: 'door', label: 'Door', icon: '🚪' },
-        { id: 'window', label: 'Window', icon: '🪟' },
-        { id: 'roof', label: 'Roof', icon: '🏠' },
-        { id: 'floor', label: 'Floor', icon: '⬜' },
-      ],
-    },
-    {
-      id: 'model',
-      label: 'Model',
-      items: [
-        { id: 'column', label: 'Column', icon: '🏛️' },
-        { id: 'beam', label: 'Beam', icon: '🔲' },
-        { id: 'grid', label: 'Grid', icon: '➕' },
-        { id: 'level', label: 'Level', icon: '📏' },
+        { id: 'system-health', label: 'System Health', icon: '📊' },
+        { id: 'recent-sessions', label: 'Recent Sessions', icon: '🕒' },
+        { id: 'recent-applications', label: 'Recent Applications', icon: '💻' },
       ],
     },
   ],
-  structure: [
+  applications: [
     {
-      id: 'structural',
-      label: 'Structural',
+      id: 'connect',
+      label: 'Connect',
       items: [
-        { id: 'struct-column', label: 'Column', icon: '🏛️' },
-        { id: 'struct-beam', label: 'Beam', icon: '🔲' },
-        { id: 'struct-floor', label: 'Floor', icon: '⬜' },
-        { id: 'struct-foundation', label: 'Foundation', icon: '🧱' },
+        { id: 'revit', label: 'Revit', icon: '🏗️' },
+        { id: 'autocad', label: 'AutoCAD', icon: '📐' },
+        { id: 'navisworks', label: 'Navisworks', icon: '🔍' },
+        { id: 'dynamo', label: 'Dynamo', icon: '⚡' },
+        { id: 'blender', label: 'Blender', icon: '🟢' },
+      ],
+    },
+    {
+      id: 'discovery',
+      label: 'Discovery',
+      items: [
+        { id: 'discover-apps', label: 'Discover Apps', icon: '🔎' },
+        { id: 'discover-connectors', label: 'Connectors', icon: '🔌' },
       ],
     },
   ],
-  mep: [
+  sessions: [
     {
-      id: 'systems',
-      label: 'Systems',
+      id: 'lifecycle',
+      label: 'Lifecycle',
       items: [
-        { id: 'duct', label: 'Duct', icon: '🔼' },
-        { id: 'pipe', label: 'Pipe', icon: '🔧' },
-        { id: 'cable-tray', label: 'Cable Tray', icon: '🔌' },
-        { id: 'conduit', label: 'Conduit', icon: '⚡' },
+        { id: 'start-session', label: 'Start Session', icon: '▶️' },
+        { id: 'attach-session', label: 'Attach', icon: '🔗' },
+        { id: 'detach-session', label: 'Detach', icon: '🚪' },
+        { id: 'restart-session', label: 'Restart', icon: '🔄' },
+        { id: 'close-session', label: 'Close', icon: '⏹️' },
       ],
     },
   ],
-  insert: [
+  observation: [
     {
-      id: 'load',
-      label: 'Load',
+      id: 'capture',
+      label: 'Capture',
       items: [
-        { id: 'load-family', label: 'Load Family', icon: '📦' },
-        { id: 'link-revit', label: 'Link Revit', icon: '🔗' },
-        { id: 'import-cad', label: 'Import CAD', icon: '📥' },
+        { id: 'capture-screen', label: 'Capture Screen', icon: '📸' },
+        { id: 'capture-window', label: 'Capture Window', icon: '🪟' },
+        { id: 'observe-window', label: 'Observe Window', icon: '👁️' },
       ],
     },
   ],
-  annotate: [
+  control: [
     {
-      id: 'dimension',
-      label: 'Dimension',
+      id: 'input',
+      label: 'Input',
       items: [
-        { id: 'linear-dim', label: 'Linear', icon: '📏' },
-        { id: 'angular-dim', label: 'Angular', icon: '📐' },
-        { id: 'radial-dim', label: 'Radial', icon: '⭕' },
+        { id: 'mouse-move', label: 'Mouse Move', icon: '🖱️' },
+        { id: 'mouse-click', label: 'Mouse Click', icon: '👆' },
+        { id: 'keyboard-type', label: 'Keyboard Type', icon: '⌨️' },
+        { id: 'hotkey', label: 'Hotkey', icon: '🔑' },
+      ],
+    },
+    {
+      id: 'window',
+      label: 'Window',
+      items: [
+        { id: 'activate-window', label: 'Activate', icon: '🪟' },
+        { id: 'minimize-window', label: 'Minimize', icon: '➖' },
+        { id: 'maximize-window', label: 'Maximize', icon: '🔲' },
+        { id: 'close-window', label: 'Close', icon: '❌' },
+      ],
+    },
+    {
+      id: 'application',
+      label: 'Application',
+      items: [
+        { id: 'launch-application', label: 'Launch', icon: '🚀' },
+        { id: 'focus-application', label: 'Focus', icon: '🎯' },
+        { id: 'close-application', label: 'Close', icon: '⏹️' },
       ],
     },
   ],
-  view: [
+  agents: [
     {
-      id: 'create',
-      label: 'Create',
+      id: 'ai-agents',
+      label: 'AI Agents',
       items: [
-        { id: 'plan-view', label: 'Plan View', icon: '📋' },
-        { id: 'section', label: 'Section', icon: '✂️' },
-        { id: 'elevation', label: 'Elevation', icon: '📊' },
-        { id: '3d-view', label: '3D View', icon: '🎲' },
+        { id: 'bim-agent', label: 'BIM Agent', icon: '🤖' },
+        { id: 'revit-agent', label: 'Revit Agent', icon: '🏗️' },
+        { id: 'mep-agent', label: 'MEP Agent', icon: '🔧' },
+        { id: 'qa-agent', label: 'QA Agent', icon: '✅' },
       ],
     },
   ],
-  manage: [
-    {
-      id: 'settings',
-      label: 'Settings',
-      items: [
-        { id: 'project-info', label: 'Project Info', icon: 'ℹ️' },
-        { id: 'materials', label: 'Materials', icon: '🎨' },
-        { id: 'settings', label: 'Settings', icon: '⚙️' },
-      ],
-    },
-  ],
-  collaborate: [
-    {
-      id: 'worksharing',
-      label: 'Worksharing',
-      items: [
-        { id: 'sync', label: 'Sync', icon: '🔄' },
-        { id: 'reload', label: 'Reload', icon: '🔁' },
-      ],
-    },
-  ],
-  analyze: [
-    {
-      id: 'analysis',
-      label: 'Analysis',
-      items: [
-        { id: 'clash', label: 'Clash Detection', icon: '💥' },
-        { id: 'quantities', label: 'Quantities', icon: '📊' },
-      ],
-    },
-  ],
-  automate: [
+  workflows: [
     {
       id: 'automation',
       label: 'Automation',
       items: [
-        { id: 'dynamo', label: 'Dynamo', icon: '⚡' },
-        { id: 'python', label: 'Python', icon: '🐍' },
-        { id: 'batch', label: 'Batch Process', icon: '📦' },
+        { id: 'n8n-workflows', label: 'n8n Workflows', icon: '🔄' },
+        { id: 'dynamo-graphs', label: 'Dynamo Graphs', icon: '⚡' },
+        { id: 'pyrevit-scripts', label: 'pyRevit Scripts', icon: '🐍' },
       ],
     },
   ],
-  datumbim: [
+  settings: [
     {
-      id: 'core',
-      label: 'DATUMBIM',
+      id: 'config',
+      label: 'Configuration',
       items: [
-        { id: 'resource-manager', label: 'Resource Manager', icon: '📚' },
-        { id: 'sdk-manager', label: 'SDK Manager', icon: '🔧' },
-        { id: 'format-manager', label: 'Format Manager', icon: '📄' },
-        { id: 'settings', label: 'Settings', icon: '⚙️' },
+        { id: 'project-settings', label: 'Project Settings', icon: '📁' },
+        { id: 'agent-settings', label: 'Agent Settings', icon: '🤖' },
+        { id: 'connector-settings', label: 'Connector Settings', icon: '🔌' },
       ],
     },
   ],
 }
 
-export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' }[] = [
+export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' }[] = [
   { id: 'view-3d', label: '{3D}', type: '3d' },
   { id: 'floor-plan', label: 'Floor Plan', type: 'floor-plan' },
   { id: 'ceiling-plan', label: 'Ceiling Plan', type: 'ceiling-plan' },
@@ -163,6 +146,7 @@ export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor
   { id: 'applications', label: 'Applications', type: 'applications' },
   { id: 'sessions', label: 'Sessions', type: 'sessions' },
   { id: 'observation', label: 'Observation', type: 'observation' },
+  { id: 'control', label: 'Control', type: 'control' },
 ]
 
 export const COMMANDS = [

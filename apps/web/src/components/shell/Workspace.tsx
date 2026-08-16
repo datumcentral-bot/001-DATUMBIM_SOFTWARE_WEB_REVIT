@@ -8,6 +8,7 @@ import NavigationControls from './NavigationControls'
 import ApplicationsScreen from '@/components/connectors/ApplicationsScreen'
 import SessionsScreen from '@/components/connectors/SessionsScreen'
 import ObservationScreen from '@/components/connectors/ObservationScreen'
+import ControlScreen from '@/components/control/ControlScreen'
 import { useShellStore } from '@/store/shellStore'
 import { useDesignSlice } from '@/store/slices/designSlice'
 
@@ -40,6 +41,8 @@ export default function Workspace() {
           <SessionsScreen />
         ) : viewType === 'observation' ? (
           <ObservationScreen />
+        ) : viewType === 'control' ? (
+          <ControlScreen />
         ) : (
           <>
             <Canvas />

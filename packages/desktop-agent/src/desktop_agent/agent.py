@@ -1,6 +1,8 @@
 from datetime import UTC, datetime
 
 from desktop_agent.audit import AuditLogger
+from desktop_agent.control.engine import ControlEngine
+from desktop_agent.control.adapters.mock import MockControlAdapter
 from desktop_agent.discovery import (
     ApplicationDiscovery,
     WindowDiscovery,
@@ -40,6 +42,7 @@ class DesktopAgent:
             discovery=self.discovery,
             window_discovery=self.window_discovery,
         )
+        self.control_engine = ControlEngine(session_manager=self.session_manager, adapter=MockControlAdapter())
 
     def register(self) -> AgentRegistration:
         machine_name = get_machine_name()
@@ -143,3 +146,90 @@ class DesktopAgent:
         if not self.agent_id:
             return []
         return self.audit.get_entries(agent_id=self.agent_id)
+
+    def execute_action(self, request: CommandRequest) -> CommandResult:
+        if not self.health:
+            raise RuntimeError("Agent not registered")
+        allowed, reason = self.permissions.check(request)
+        if not allowed:
+            result = CommandResult(
+                command_id=request.command_id,
+                status="denied",
+                error=reason,
+                timestamp=datetime.now(tz=UTC),
+            )
+            self.audit.log(
+                AuditLogEntry(
+                    id=request.command_id,
+                    agent_id=self.agent_id or "unknown",
+                    action=request.action,
+                    target="",
+                    parameters=request.parameters,
+                    result="denied",
+                    timestamp=datetime.now(tz=UTC),
+                    error=reason,
+                )
+            )
+            return result
+        action_request = ActionRequest(
+            action_id=request.command_id,
+            session_id="",
+            application_id="",
+            action_type=request.action,
+            parameters=request.parameters,
+            requested_by=self.agent_id or "unknown",
+            risk_level=request.risk_level,
+            approval_required=request.approval_required,
+            timestamp=datetime.now(tz=UTC),
+            timeout=request.timeout_seconds,
+            dry_run=False,
+        )
+        action_result = self.control_engine.execute(action_request)
+        self.audit.log(
+            AuditLogEntry(
+                id=request.command_id,
+                agent_id=self.agent_id or "unknown",
+                action=request.action,
+                target="",
+                parameters=request.parameters,
+                result=action_result.status,
+                timestamp=datetime.now(tz=UTC),
+                error=action_result.error,
+            )
+        )
+        return CommandResult(
+            command_id=request.command_id,
+            status=action_result.status,
+            result=action_result.result,
+            error=action_result.error,
+            timestamp=datetime.now(tz=UTC),
+        )
+
+    def execute_action_plan(self, plan: ActionPlan) -> list[CommandResult]:
+        if not self.health:
+            raise RuntimeError("Agent not registered")
+        results: list[CommandResult] = []
+        action_results = self.control_engine.execute_plan(plan)
+        for action_result in action_results:
+            results.append(
+                CommandResult(
+                    command_id=action_result.action_id,
+                    status=action_result.status,
+                    result=action_result.result,
+                    error=action_result.error,
+                    timestamp=datetime.now(tz=UTC),
+                )
+            )
+            self.audit.log(
+                AuditLogEntry(
+                    id=action_result.action_id,
+                    agent_id=self.agent_id or "unknown",
+                    action="plan_action",
+                    target="",
+                    parameters={},
+                    result=action_result.status,
+                    timestamp=datetime.now(tz=UTC),
+                    error=action_result.error,
+                )
+            )
+        return results

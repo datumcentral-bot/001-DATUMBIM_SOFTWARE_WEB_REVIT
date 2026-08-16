@@ -17,9 +17,11 @@ describe('Home Page', () => {
 
   it('renders ribbon tabs', async () => {
     render(<Home />)
-    expect(screen.getByText('Architecture')).toBeDefined()
-    expect(screen.getByText('Structure')).toBeDefined()
-    expect(screen.getByText('MEP')).toBeDefined()
+    expect(screen.getByText('Home')).toBeDefined()
+    expect(screen.getByText('Applications')).toBeDefined()
+    expect(screen.getByText('Sessions')).toBeDefined()
+    expect(screen.getByText('Observation')).toBeDefined()
+    expect(screen.getByText('Control')).toBeDefined()
     const datumbimElements = screen.getAllByText('DATUMBIM')
     expect(datumbimElements.length).toBeGreaterThanOrEqual(1)
   })
