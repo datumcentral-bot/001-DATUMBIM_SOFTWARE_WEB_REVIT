@@ -4,7 +4,26 @@ from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix="/integrations", tags=["integrations"])
 
-_integrations: dict[str, dict] = {}
+_integrations: dict[str, dict] = {
+    "n8n": {
+        "integration_id": "n8n",
+        "name": "n8n",
+        "description": "n8n workflow automation",
+        "integration_type": "automation",
+        "status": "not_installed",
+        "version": None,
+        "installed_path": None,
+        "executable": None,
+        "capabilities": [
+            {"capability_id": "n8n_health", "name": "Health Check", "description": "Check n8n health", "category": "automation", "available": False},
+            {"capability_id": "n8n_list_workflows", "name": "List Workflows", "description": "List available n8n workflows", "category": "automation", "available": False},
+            {"capability_id": "n8n_execute_workflow", "name": "Execute Workflow", "description": "Execute an n8n workflow", "category": "automation", "available": False, "requires_transaction": True, "approval_required": True, "risk_level": "medium"},
+            {"capability_id": "n8n_trigger_webhook", "name": "Trigger Webhook", "description": "Trigger an n8n webhook", "category": "automation", "available": False, "requires_transaction": True, "approval_required": True, "risk_level": "medium"},
+        ],
+        "metadata": {},
+        "error": "n8n installation not found",
+    }
+}
 _tools: dict[str, dict] = {}
 _workflows: dict[str, dict] = {}
 
