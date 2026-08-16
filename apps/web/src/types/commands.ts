@@ -51,7 +51,7 @@ export interface CommandCategory {
 export interface ViewDefinition {
   id: string
   name: string
-  type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions'
+  type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation'
   discipline: 'architecture' | 'structure' | 'mep' | 'coordination' | 'generic'
   visibilityState: boolean
   activeState: boolean

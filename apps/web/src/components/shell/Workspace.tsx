@@ -5,12 +5,16 @@ import ViewTabs from './ViewTabs'
 import NavigationBreadcrumb from './NavigationBreadcrumb'
 import Canvas from './Canvas'
 import NavigationControls from './NavigationControls'
+import ApplicationsScreen from '@/components/connectors/ApplicationsScreen'
+import SessionsScreen from '@/components/connectors/SessionsScreen'
+import ObservationScreen from '@/components/connectors/ObservationScreen'
 import { useShellStore } from '@/store/shellStore'
 import { useDesignSlice } from '@/store/slices/designSlice'
 
 export default function Workspace() {
-  const { addNotification, views, setActiveView } = useShellStore()
+  const { addNotification, views, setActiveView, activeView } = useShellStore()
   const initialize = useDesignSlice((state) => state.initialize)
+  const viewType = activeView?.type || '3d'
 
   useEffect(() => {
     initialize()
@@ -30,8 +34,18 @@ export default function Workspace() {
       <NavigationBreadcrumb />
       <ViewTabs activeTab={useShellStore.getState().activeViewTab || views[0]?.id || null} onTabChange={handleViewChange} />
       <div className="flex-1 relative">
-        <Canvas />
-        <NavigationControls />
+        {viewType === 'applications' ? (
+          <ApplicationsScreen />
+        ) : viewType === 'sessions' ? (
+          <SessionsScreen />
+        ) : viewType === 'observation' ? (
+          <ObservationScreen />
+        ) : (
+          <>
+            <Canvas />
+            <NavigationControls />
+          </>
+        )}
       </div>
     </div>
   )

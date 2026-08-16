@@ -16,8 +16,16 @@ from desktop_agent.models import (
     SessionInfo,
     WindowInfo,
 )
+from desktop_agent.observation_engine import ObservationEngine
+from desktop_agent.observation_models import (
+    ObservationEngineState,
+    ObservationEntry,
+    ScreenObservationRequest,
+    ScreenshotCapture,
+)
 from desktop_agent.pairing import PairingManager
 from desktop_agent.permissions import PermissionEngine, RiskLevel
+from desktop_agent.screen_capture import ScreenCapture
 from desktop_agent.session_manager import SessionManager
 
 __all__ = [
@@ -36,9 +44,15 @@ __all__ = [
     "HeartbeatManager",
     "Job",
     "JobQueue",
+    "ObservationEngine",
+    "ObservationEngineState",
+    "ObservationEntry",
     "PairingManager",
     "PermissionEngine",
     "RiskLevel",
+    "ScreenCapture",
+    "ScreenObservationRequest",
+    "ScreenshotCapture",
     "SessionInfo",
     "SessionManager",
     "WindowDiscovery",

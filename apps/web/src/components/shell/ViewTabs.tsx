@@ -17,6 +17,9 @@ const VIEW_ICONS: Record<string, string> = {
   'drafting': '✏️',
   'browser': '📂',
   'model': '📦',
+  'applications': '🖥️',
+  'sessions': '🔗',
+  'observation': '👁️',
 }
 
 export default function ViewTabs({ activeTab, onTabChange }: { activeTab: string | null; onTabChange: (tabId: string) => void }) {
