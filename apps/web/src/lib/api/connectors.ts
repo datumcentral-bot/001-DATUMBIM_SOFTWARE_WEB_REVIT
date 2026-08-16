@@ -39,4 +39,28 @@ export const connectorsApi = {
     const response = await apiClient.get<{ session: ApplicationSession }>(`/connectors/sessions/${sessionId}`)
     return response.data?.session ?? null
   },
+
+  async startSession(applicationId: string): Promise<ApplicationSession | null> {
+    const response = await apiClient.post<{ session: ApplicationSession }>(`/sessions/${encodeURIComponent(applicationId)}/start`)
+    return response.data?.session ?? null
+  },
+
+  async attachSession(applicationId: string): Promise<ApplicationSession | null> {
+    const response = await apiClient.post<{ session: ApplicationSession }>(`/sessions/${encodeURIComponent(applicationId)}/attach`)
+    return response.data?.session ?? null
+  },
+
+  async detachSession(sessionId: string): Promise<ApplicationSession | null> {
+    const response = await apiClient.post<{ session: ApplicationSession }>(`/sessions/${encodeURIComponent(sessionId)}/detach`)
+    return response.data?.session ?? null
+  },
+
+  async restartSession(sessionId: string): Promise<ApplicationSession | null> {
+    const response = await apiClient.post<{ session: ApplicationSession }>(`/sessions/${encodeURIComponent(sessionId)}/restart`)
+    return response.data?.session ?? null
+  },
+
+  async closeSession(sessionId: string): Promise<void> {
+    await apiClient.delete<{ status: string }>(`/sessions/${encodeURIComponent(sessionId)}`)
+  },
 }

@@ -18,6 +18,7 @@ from desktop_agent.models import (
 )
 from desktop_agent.pairing import PairingManager
 from desktop_agent.permissions import PermissionEngine, RiskLevel
+from desktop_agent.session_manager import SessionManager
 
 __all__ = [
     "AgentCapabilities",
@@ -39,6 +40,7 @@ __all__ = [
     "PermissionEngine",
     "RiskLevel",
     "SessionInfo",
+    "SessionManager",
     "WindowDiscovery",
     "WindowInfo",
 ]

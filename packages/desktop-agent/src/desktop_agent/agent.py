@@ -21,6 +21,7 @@ from desktop_agent.models import (
 )
 from desktop_agent.pairing import PairingManager
 from desktop_agent.permissions import PermissionEngine
+from desktop_agent.session_manager import SessionManager
 
 
 class DesktopAgent:
@@ -35,7 +36,10 @@ class DesktopAgent:
         self.audit = AuditLogger()
         self.job_queue = JobQueue()
         self.health: HealthManager | None = None
-        self._sessions: dict[str, SessionInfo] = {}
+        self.session_manager = SessionManager(
+            discovery=self.discovery,
+            window_discovery=self.window_discovery,
+        )
 
     def register(self) -> AgentRegistration:
         machine_name = get_machine_name()
@@ -58,31 +62,32 @@ class DesktopAgent:
         return heartbeat
 
     def discover_applications(self) -> list[ApplicationInfo]:
-        return self.discovery.discover()
+        return self.session_manager.discover_applications()
 
     def discover_windows(self) -> list[dict]:
-        return [w.model_dump() for w in self.window_discovery.discover_windows()]
+        return [w.model_dump() for w in self.session_manager.discover_windows()]
 
     def create_session(self, application_id: str) -> SessionInfo:
-        session = SessionInfo(
-            session_id=f"{application_id}-{datetime.now(tz=UTC).timestamp()}",
-            application_id=application_id,
-            started_at=datetime.now(tz=UTC),
-        )
-        self._sessions[session.session_id] = session
-        return session
+        return self.session_manager.start_session(application_id)
+
+    def attach_session(self, application_id: str) -> SessionInfo | None:
+        return self.session_manager.attach_session(application_id)
+
+    def detach_session(self, session_id: str) -> bool:
+        return self.session_manager.detach_session(session_id)
 
     def close_session(self, session_id: str) -> bool:
-        if session_id in self._sessions:
-            del self._sessions[session_id]
-            return True
-        return False
+        return self.session_manager.close_session(session_id)
+
+    def restart_session(self, session_id: str) -> SessionInfo | None:
+        return self.session_manager.restart_session(session_id)
 
     def get_session(self, session_id: str) -> SessionInfo | None:
-        return self._sessions.get(session_id)
+        return self.session_manager.get_session(session_id)
 
     def get_sessions(self) -> list[SessionInfo]:
-        return list(self._sessions.values())
+        return self.session_manager.get_sessions()
+
 
     def execute_command(self, request: CommandRequest) -> CommandResult:
         if not self.health:
