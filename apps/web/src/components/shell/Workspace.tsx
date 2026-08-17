@@ -11,6 +11,8 @@ import ObservationScreen from '@/components/connectors/ObservationScreen'
 import ControlScreen from '@/components/control/ControlScreen'
 import LiveApplicationScreen from '@/components/observation/LiveApplicationScreen'
 import IntegrationsScreen from '@/components/integrations/IntegrationsScreen'
+import ExecutionCenter from '@/components/execution/ExecutionCenter'
+import WorkflowCenter from '@/components/execution/WorkflowCenter'
 import { useShellStore } from '@/store/shellStore'
 import { useDesignSlice } from '@/store/slices/designSlice'
 
@@ -49,6 +51,10 @@ export default function Workspace() {
           <LiveApplicationScreen />
         ) : viewType === 'integrations' ? (
           <IntegrationsScreen />
+        ) : viewType === 'execution' ? (
+          <ExecutionCenter />
+        ) : viewType === 'workflows' ? (
+          <WorkflowCenter />
         ) : (
           <>
             <Canvas />
