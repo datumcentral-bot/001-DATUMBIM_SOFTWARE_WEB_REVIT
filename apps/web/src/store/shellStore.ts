@@ -171,6 +171,7 @@ export const useShellStore = create<ShellState>((set, get) => ({
     { id: 'integrations', name: 'Integrations', type: 'integrations', discipline: 'generic', visibilityState: true, activeState: false },
     { id: 'execution', name: 'Execution Center', type: 'execution', discipline: 'generic', visibilityState: true, activeState: false },
     { id: 'workflows', name: 'Workflow Center', type: 'workflows', discipline: 'generic', visibilityState: true, activeState: false },
+    { id: 'agents', name: 'Agent Control Center', type: 'agents', discipline: 'generic', visibilityState: true, activeState: false },
   ],
   activeView: null,
   setActiveView: (viewId) => {

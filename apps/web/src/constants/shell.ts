@@ -191,7 +191,7 @@ export const RIBBON_PANELS: Record<string, { id: string; label: string; items: {
   ],
 }
 
-export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' | 'revit' | 'live-application' | 'integrations' | 'execution' | 'workflows' }[] = [
+export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' | 'revit' | 'live-application' | 'integrations' | 'execution' | 'workflows' | 'agents' }[] = [
   { id: 'view-3d', label: '{3D}', type: '3d' },
   { id: 'floor-plan', label: 'Floor Plan', type: 'floor-plan' },
   { id: 'ceiling-plan', label: 'Ceiling Plan', type: 'ceiling-plan' },
@@ -212,6 +212,7 @@ export const DEFAULT_VIEW_TABS: { id: string; label: string; type: '3d' | 'floor
   { id: 'integrations', label: 'Integrations', type: 'integrations' },
   { id: 'execution', label: 'Execution', type: 'execution' },
   { id: 'workflows', label: 'Workflows', type: 'workflows' },
+  { id: 'agents', label: 'Agents', type: 'agents' },
 ]
 
 export const COMMANDS = [

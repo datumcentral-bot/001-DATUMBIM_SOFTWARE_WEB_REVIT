@@ -28,6 +28,7 @@ const VIEW_ICONS: Record<string, string> = {
   'revit': '🏗️',
   'live-application': '🖥️',
   'integrations': '🔌',
+  'agents': '🧬',
 }
 
 export default function ViewTabs({ activeTab, onTabChange }: { activeTab: string | null; onTabChange: (tabId: string) => void }) {

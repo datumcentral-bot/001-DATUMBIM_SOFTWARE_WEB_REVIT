@@ -13,6 +13,7 @@ import LiveApplicationScreen from '@/components/observation/LiveApplicationScree
 import IntegrationsScreen from '@/components/integrations/IntegrationsScreen'
 import ExecutionCenter from '@/components/execution/ExecutionCenter'
 import WorkflowCenter from '@/components/execution/WorkflowCenter'
+import AgentControlCenter from '@/components/agents/AgentControlCenter'
 import { useShellStore } from '@/store/shellStore'
 import { useDesignSlice } from '@/store/slices/designSlice'
 
@@ -55,6 +56,8 @@ export default function Workspace() {
           <ExecutionCenter />
         ) : viewType === 'workflows' ? (
           <WorkflowCenter />
+        ) : viewType === 'agents' ? (
+          <AgentControlCenter />
         ) : (
           <>
             <Canvas />

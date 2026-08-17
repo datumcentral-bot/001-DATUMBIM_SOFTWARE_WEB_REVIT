@@ -19,6 +19,7 @@ from datumbim.routes.orchestration import router as orchestration_router
 from datumbim.routes.integrations import router as integrations_router
 from datumbim.routes.execution import router as execution_router
 from datumbim.routes.workflows import router as workflows_router
+from datumbim.routes.agents import router as agents_router
 
 app = FastAPI(
     title="DATUMBIM API",
@@ -52,6 +53,7 @@ app.include_router(orchestration_router)
 app.include_router(integrations_router)
 app.include_router(execution_router)
 app.include_router(workflows_router)
+app.include_router(agents_router)
 
 @app.get("/health")
 async def health() -> dict[str, str]:

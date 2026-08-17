@@ -1,7 +1,7 @@
 export interface ViewDefinition {
   id: string
   name: string
-  type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' | 'revit' | 'live-application' | 'integrations' | 'execution' | 'workflows'
+  type: '3d' | 'floor-plan' | 'ceiling-plan' | 'elevation' | 'section' | 'detail' | 'schedule' | 'sheet' | 'drafting' | 'browser' | 'model' | 'applications' | 'sessions' | 'observation' | 'control' | 'ai' | 'planner' | 'revit' | 'live-application' | 'integrations' | 'execution' | 'workflows' | 'agents'
   discipline: 'architecture' | 'structure' | 'mep' | 'coordination' | 'generic'
   visibilityState: boolean
   activeState: boolean
